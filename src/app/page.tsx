@@ -4,8 +4,6 @@ import { restaurant, popularDishes } from "@/lib/restaurant";
 import Link from "next/link";
 import { ParallaxSection } from "@/components/ui/ParallaxSection";
 
-// REEMPLAZA este ID con el de tu video de YouTube
-const YOUTUBE_VIDEO_ID = "TODO_AGREGAR_ID_VIDEO";
 
 export default function Home() {
   return (
@@ -128,8 +126,18 @@ export default function Home() {
                 Platos que tienes que probar!
               </h2>
               <p className="mt-7 max-w-md text-base leading-7 text-charcoal/65">
-                Recetas insignia de la casa, no te puedes perder estas especialidades tradicionales Mexicanas.
+                Recetas insignia de la casa, no te puedes perder estas especialidades tradicionales desde México.
               </p>
+              <div className="mt-10 flex flex-wrap justify-center">
+                <a
+                  href={restaurant.orderUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center bg-salsa px-7 py-4 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
+                >
+                  Ver menú completo
+                </a>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 content-start gap-x-10">
@@ -150,44 +158,35 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <div className="flex flex-wrap justify-center">
-            <div>
-              <div className="mt-10">
-                <a
-                  href={restaurant.orderUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center bg-salsa px-7 py-4 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
-                >
-                  Ver menú completo
-                </a>
-              </div>
-            </div>
-          </div>
         </Container>
       </section>
 
       {/* ── Guacamole + Video ─────────────────────────────────────────── */}
-      <section className="bg-cilantro/8">
-        {/* Banda de texto */}
-        <Container className="py-20 sm:py-24">
+      <ParallaxSection
+        image={{
+          src: "/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png",
+          alt: "Aguacates frescos El Tepeyac",
+          sizes: "100vw",
+        }}
+        strength={200}
+        overlay={
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/65" />
+        }
+      >
+        <Container className="py-20 sm:py-28">
           <div className="grid gap-14 lg:grid-cols-2 lg:gap-20 lg:items-center">
             <div>
-              <div className="text-[10px] font-mono tracking-[0.36em] uppercase text-cilantro/70">
+              <div className="text-[20px] font-mono tracking-[0.36em] uppercase text-bone/60">
                 Nuestra especialidad
               </div>
-              <h2 className="mt-6 text-4xl leading-[1.0] text-charcoal sm:text-5xl">
+              <h2 className="mt-6 text-4xl leading-[1.0] text-bone sm:text-5xl">
                 Fresco,{" "}
-                <span className="text-charcoal/55">siempre al momento.</span>
+                <span className="text-bone/80">hacemos guacamole todos los días!</span>
               </h2>
-              <p className="mt-6 text-base leading-7 text-charcoal/65">
-                Tomate, cebolla, cilantro, serranos, limón, aguacate. Sin más secretos.
+              <p className="mt-6 text-base leading-7 text-bone/75">
+                Tomate, cebolla, cilantro, limón, aguacate. Sin más secretos. <br />
                 El guacamole que se te graba en la memoria desde la primera probada.
               </p>
-              <div className="mt-3 text-sm text-charcoal/50">
-                <span className="font-semibold text-charcoal/70">Ingredientes:</span>{" "}
-                tomate, cebolla, cilantro, serranos, limón, aguacate.
-              </div>
               <div className="mt-10">
                 <a
                   href={restaurant.orderUrl}
@@ -200,50 +199,19 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Video de YouTube — reemplaza YOUTUBE_VIDEO_ID */}
-            <div className="relative aspect-video w-full overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.16)]">
-              {YOUTUBE_VIDEO_ID === "TODO_AGREGAR_ID_VIDEO" ? (
-                /* Placeholder hasta que se agregue el ID del video */
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-charcoal/8">
-                  <div className="text-[10px] font-mono tracking-[0.28em] uppercase text-charcoal/40">
-                    Video · Próximamente
-                  </div>
-                  <div className="relative mt-4 h-48 w-full overflow-hidden">
-                    <Image
-                      src="/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png"
-                      alt="Guacamole El Tepeyac"
-                      fill
-                      sizes="600px"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/20" />
-                  </div>
-                </div>
-              ) : (
-                <iframe
-                  src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?rel=0&modestbranding=1`}
-                  title="El Tepeyac — Guacamole"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="absolute inset-0 h-full w-full"
-                />
-              )}
+            {/* Video de Google Drive */}
+            <div className="relative aspect-video w-full overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.5)]">
+              <iframe
+                src="https://drive.google.com/file/d/1ZDyYJuiswtwoBkalw462QDi-LO4OIK53/preview"
+                title="El Tepeyac — Guacamole"
+                allow="autoplay"
+                allowFullScreen
+                className="absolute inset-0 h-full w-full"
+              />
             </div>
           </div>
         </Container>
-
-        {/* Imagen full-bleed de los aguacates */}
-        <div className="relative h-56 overflow-hidden sm:h-72">
-          <Image
-            src="/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png"
-            alt="Aguacates frescos"
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-cilantro/20" />
-        </div>
-      </section>
+      </ParallaxSection>
 
       {/* ── Historia — ÚLTIMA SECCIÓN ─────────────────────────────────── */}
       <section className="bg-charcoal py-28 sm:py-36 text-bone">

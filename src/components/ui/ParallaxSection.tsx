@@ -69,8 +69,12 @@ export function ParallaxSection({
     <section ref={rootRef} className={`relative w-full overflow-hidden ${className}`}>
       <div className="absolute inset-0">
         <div
-          className="absolute inset-[-0.025%] will-change-transform"
+          className="absolute will-change-transform"
           style={{
+            top: `-${strength}px`,
+            bottom: `-${strength}px`,
+            left: 0,
+            right: 0,
             transform: shouldAnimate
               ? `translate3d(0, ${y}px, 0)`
               : "translate3d(0, 0, 0)",
