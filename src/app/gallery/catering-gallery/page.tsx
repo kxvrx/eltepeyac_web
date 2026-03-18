@@ -1,60 +1,120 @@
 import { Container } from "@/components/ui/Container";
 import { ExternalButtonLink } from "@/components/ui/Button";
 import { restaurant } from "@/lib/restaurant";
+import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = {
-  title: "Catering Gallery",
-  description: "Catering setups and large-format plates.",
+  title: "Galería de catering",
+  description: "Montajes de catering y platos para eventos.",
 };
+
+const tiles = [
+  {
+    src: "/old-site/images/home/abril-4.jpg",
+    title: "Almuerzo de oficina",
+    note: "Bandejas, guarniciones y montaje rápido.",
+    ratio: "aspect-[4/3]",
+  },
+  {
+    src: "/old-site/images/contact/tepeyac-mayo-1.jpg",
+    title: "Estilo familiar",
+    note: "Listo para servir, hecho al momento.",
+    ratio: "aspect-[3/4]",
+  },
+  {
+    src: "/old-site/images/home/DSC00014.jpg",
+    title: "Evento pequeño",
+    note: "Fácil de recoger, sabor cálido.",
+    ratio: "aspect-[4/5]",
+  },
+] as const;
 
 export default function CateringGalleryPage() {
   return (
     <div>
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_12%_18%,rgba(47,125,58,0.14),transparent_60%),radial-gradient(circle_at_88%_20%,rgba(215,58,47,0.12),transparent_62%),linear-gradient(180deg,rgba(0,0,0,0.03),transparent_30%)]" />
-        <Container className="relative py-16 sm:py-20">
-          <div className="max-w-2xl">
-            <div className="text-xs font-mono tracking-[0.22em] text-muted">CATERING</div>
-            <h1 className="mt-3 font-[family-name:var(--font-heading)] text-4xl font-semibold leading-[1.0] tracking-tight text-charcoal sm:text-5xl">
-              Catering Gallery
-            </h1>
-            <p className="mt-5 text-base leading-7 text-charcoal/75">
-              A visual portfolio for events — designed to help decisions happen fast.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ExternalButtonLink href={restaurant.orderUrl} tone="salsa">
-                Order / Inquire
-              </ExternalButtonLink>
-              <span className="text-xs text-muted">
-                Add real catering photos later; layout supports mixed aspect ratios.
-              </span>
+      <section className="py-14 sm:py-18">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
+            <div className="lg:col-span-7">
+              <div className="text-[11px] font-mono tracking-[0.28em] text-charcoal/55">
+                CATERING
+              </div>
+              <h1 className="mt-4 text-5xl leading-[0.92] sm:text-6xl">Galería de catering</h1>
+              <p className="mt-6 max-w-2xl text-base leading-7 text-charcoal/75">
+                Un portafolio visual para eventos — diseñado para decidir rápido. Cambia estas
+                imágenes de ejemplo por fotos reales cuando quieras.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <ExternalButtonLink href={restaurant.orderUrl} tone="salsa" className="rounded-md">
+                  Ordenar / Cotizar
+                </ExternalButtonLink>
+                <Link
+                  href="/contact"
+                  className="rounded-md border border-border bg-paper px-5 py-3 text-sm font-semibold text-charcoal hover:bg-black/[0.02]"
+                >
+                  Contactar catering
+                </Link>
+                <Link
+                  href="/gallery"
+                  className="text-sm font-semibold text-charcoal/75 underline underline-offset-4 decoration-black/20 hover:decoration-black/45"
+                >
+                  Volver a galería
+                </Link>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5">
+              <div className="paper grain overflow-hidden rounded-2xl p-7">
+                <div className="text-[11px] font-mono tracking-[0.28em] text-charcoal/55">
+                  NOTAS
+                </div>
+                <div className="mt-4 text-sm leading-6 text-charcoal/75">
+                  Agrega paquetes, mínimos y ventanas de recogida aquí. Este bloque funciona
+                  como un “insert” de menú: ideal para leer rápido.
+                </div>
+                <div className="mt-6 ornament" />
+                <div className="mt-6 grid gap-3 text-sm text-charcoal/75">
+                  <div>
+                    <span className="font-semibold text-charcoal">Rápido:</span> consulta → respuesta
+                  </div>
+                  <div>
+                    <span className="font-semibold text-charcoal">Flexible:</span> chico a grande
+                  </div>
+                  <div>
+                    <span className="font-semibold text-charcoal">Al momento:</span> hecho al pedir
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
-      <section className="mt-2">
+      <section className="pb-16 sm:pb-20">
         <Container>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 12 }).map((_, idx) => (
-              <div
-                key={idx}
-                className="relative overflow-hidden rounded-[2.25rem] border border-border bg-card shadow-[0_18px_55px_rgba(0,0,0,0.06)]"
-              >
-                <div className="aspect-[4/3] bg-[radial-gradient(circle_at_20%_20%,rgba(31,78,168,0.10),transparent_55%),radial-gradient(circle_at_85%_65%,rgba(215,58,47,0.10),transparent_60%),linear-gradient(135deg,rgba(0,0,0,0.02),rgba(0,0,0,0))]" />
-                <div className="p-5">
-                  <div className="text-xs font-mono tracking-[0.22em] text-muted">
-                    SETUP
+            {Array.from({ length: 9 }).map((_, idx) => {
+              const t = tiles[idx % tiles.length];
+              return (
+                <div
+                  key={idx}
+                  className="relative overflow-hidden rounded-2xl border border-border bg-paper shadow-[0_18px_55px_rgba(0,0,0,0.06)]"
+                >
+                  <div className={`relative ${t.ratio}`}>
+                    <Image src={t.src} alt="Catering placeholder" fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-black/12 via-transparent to-black/0" />
                   </div>
-                  <div className="mt-2 text-sm font-semibold text-charcoal">
-                    Event moment #{idx + 1}
-                  </div>
-                  <div className="mt-1 text-xs text-charcoal/70">
-                    Replace this caption with dish names or package notes.
+                  <div className="paper border-t border-border px-6 py-5">
+                    <div className="text-[11px] font-mono tracking-[0.28em] text-charcoal/55">
+                      SETUP
+                    </div>
+                    <div className="mt-2 text-base font-semibold text-charcoal">{t.title}</div>
+                    <div className="mt-1 text-sm text-charcoal/70">{t.note}</div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Container>
       </section>

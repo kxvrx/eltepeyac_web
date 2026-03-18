@@ -6,7 +6,7 @@ export const restaurant = {
   addressLine2: "New York, NY 10029",
   phoneDisplay: "+1 (212) 814-4882",
   phoneE164: "+12128144882",
-  hours: "Mon–Sun · 8:00 AM – 11:00 PM",
+  hours: "Lun–Dom · 8:00 AM – 11:30 PM",
   orderUrl: "https://getsauce.com/",
   mapQuery: "1505 Lexington Ave, New York, NY 10029",
 } as const;
@@ -19,31 +19,31 @@ export type Dish = {
 };
 
 export const popularDishes: Dish[] = [
-  { id: "guacamole", name: "Guacamole", note: "Fresh · Famous signature", accent: "cilantro" },
-  { id: "tacos", name: "Tacos", note: "Classic · Fast · Satisfying", accent: "salsa" },
-  { id: "burrito", name: "Burritos", note: "Big · Comforting", accent: "oaxaca" },
-  { id: "enchiladas", name: "Enchiladas", note: "Traditional · Saucy", accent: "salsa" },
-  { id: "ceviche", name: "Ceviche", note: "Bright · Fresh", accent: "cilantro" },
-  { id: "quesadilla", name: "Quesadillas", note: "Blue corn moments", accent: "oaxaca" },
+  { id: "guacamole", name: "Guacamole", note: "Nuestra insignia local!", accent: "cilantro" },
+  { id: "tacos", name: "Tacos", note: "Clásicos, rápidos, auténticos", accent: "salsa" },
+  { id: "burrito", name: "Burritos", note: "NYC's Top 5 Burritos", accent: "oaxaca" },
+  { id: "enchiladas", name: "Enchiladas", note: "Como las de tu casa", accent: "salsa" },
+  { id: "ceviche", name: "Ceviche", note: "Fresco y delicioso", accent: "cilantro" },
+  { id: "quesadilla", name: "Quesadillas", note: "Con tortilla de Maíz azul", accent: "oaxaca" },
 ];
 
 export const galleryCollections = [
   {
     slug: "gallery",
-    title: "Gallery",
-    subtitle: "Moments, plates, and the room.",
+    title: "Galería",
+    subtitle: "Momentos, platos y el lugar.",
     href: "/gallery",
   },
   {
     slug: "altar-dia-de-muertos",
     title: "Altar Día de Muertos",
-    subtitle: "A seasonal story told in color and flowers.",
+    subtitle: "Una historia de temporada contada con color y flores.",
     href: "/gallery/altar-dia-de-muertos",
   },
   {
     slug: "catering-gallery",
-    title: "Catering Gallery",
-    subtitle: "Large-format plates, events, and setups.",
+    title: "Galería de catering",
+    subtitle: "Eventos, montajes y platos para grupos.",
     href: "/gallery/catering-gallery",
   },
 ] as const;

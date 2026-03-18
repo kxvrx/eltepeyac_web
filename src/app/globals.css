@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand palette (derived from the old site guide) */
+  /* Brand palette (restaurant-web, paper + ink) */
   --bone: #fbf7ee; /* Blanco Hueso */
+  --paper: #fffaf0; /* lighter paper highlight */
   --charcoal: #151515; /* Carbón */
+  --ink: #0f1011; /* deeper ink for headings */
   --cilantro: #2f7d3a; /* Verde Cilantro */
   --salsa: #d73a2f; /* Rojo Salsa */
   --oaxaca: #1f4ea8; /* Azul Oaxaca */
+  --maiz: #f2cc2f; /* Maíz */
 
   --bg: var(--bone);
   --fg: var(--charcoal);
-  --card: #ffffff;
-  --muted: color-mix(in oklab, var(--charcoal) 65%, white);
-  --border: color-mix(in oklab, var(--charcoal) 18%, white);
-
-  --shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
-  --shadow-soft: 0 10px 24px rgba(0, 0, 0, 0.08);
+  --muted: color-mix(in oklab, var(--charcoal) 62%, white);
+  --border: color-mix(in oklab, var(--charcoal) 16%, white);
+  --hairline: color-mix(in oklab, var(--charcoal) 10%, white);
 }
 
 @theme inline {
@@ -25,13 +25,16 @@
   --font-mono: var(--font-mono);
 
   --color-bone: var(--bone);
+  --color-paper: var(--paper);
   --color-charcoal: var(--charcoal);
+  --color-ink: var(--ink);
   --color-cilantro: var(--cilantro);
   --color-salsa: var(--salsa);
   --color-oaxaca: var(--oaxaca);
-  --color-card: var(--card);
+  --color-maiz: var(--maiz);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-hairline: var(--hairline);
 }
 
 body {
@@ -54,7 +57,7 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.22;
+  opacity: 0.18;
   mix-blend-mode: multiply;
   background-image: repeating-linear-gradient(
       0deg,
@@ -70,4 +73,55 @@ body {
       transparent 1px,
       transparent 3px
     );
+}
+
+/* Global type rhythm — restaurant site, not app UI */
+/* NOTE: inside @layer base so Tailwind utility classes (text-white, etc.) can override */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading), ui-serif, Georgia, "Times New Roman", Times, serif;
+    color: var(--ink);
+  }
+}
+
+/* Reusable “menu paper” surface */
+.paper {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(242, 204, 47, 0.10), transparent 48%),
+    radial-gradient(circle at 80% 72%, rgba(47, 125, 58, 0.08), transparent 52%),
+    linear-gradient(180deg, var(--paper), color-mix(in oklab, var(--paper) 60%, var(--bone)));
+  border: 1px solid var(--border);
+}
+
+/* Full-bleed photo strip — use on wrappers, not images */
+.photo-strip {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Thin ornamental divider (print-feel) */
+.ornament {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.22), transparent);
+}
+.ornament::before,
+.ornament::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  background: var(--paper);
+  transform: translateY(-50%) rotate(45deg);
+}
+.ornament::before {
+  left: calc(50% - 32px);
+}
+.ornament::after {
+  left: calc(50% + 26px);
 }

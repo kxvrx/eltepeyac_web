@@ -5,13 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { restaurant } from "@/lib/restaurant";
-import { ExternalButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 
 const nav = [
-  { href: "/", label: "Home" },
-  { href: "/gallery", label: "Gallery" },
-  { href: "/contact", label: "Contact" },
+  { href: "/", label: "Inicio" },
+  { href: "/gallery", label: "Galería" },
+  { href: "/contact", label: "Contacto" },
 ] as const;
 
 export function SiteHeader() {
@@ -20,143 +19,170 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 64);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const heroPages = pathname === "/" || pathname === "/contact";
+  const heroPages = pathname === "/" || pathname === "/contact" || pathname === "/gallery";
   const onTopOfHero = heroPages && !scrolled;
 
+  // Nav items: filtrar la página actual para no mostrarla
+  const visibleNav = nav.filter((item) => item.href !== pathname);
+
   const headerClass = useMemo(() => {
-    const base = "sticky top-0 z-50 transition duration-300";
+    const base = "sticky top-0 z-50 transition-all duration-300";
     if (onTopOfHero) return `${base} bg-transparent`;
-    return `${base} bg-bone/90 shadow-[0_10px_30px_rgba(0,0,0,0.10)] supports-[backdrop-filter]:backdrop-blur-xl`;
+    // Header con scroll → fondo cilantro sólido
+    return `${base} bg-cilantro shadow-[0_2px_24px_rgba(0,0,0,0.18)]`;
   }, [onTopOfHero]);
 
   return (
     <header className={headerClass}>
-      <Container className="py-4">
-        <div className="flex items-center justify-between gap-3">
-          <Link
-            href="/"
-            className="group inline-flex items-center gap-3 rounded-xl px-2 py-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cilantro/20"
-          >
-            <span className="relative h-9 w-36 sm:h-10 sm:w-40">
-              <Image
-                src={
-                  onTopOfHero
-                    ? "/old-site/images/logos/logo_blanco.png"
-                    : "/old-site/images/logos/logo_color.png"
-                }
-                alt="Taqueria El Tepeyac"
-                fill
-                sizes="160px"
-                className="object-contain"
-                priority
-              />
-            </span>
-          </Link>
+      <div className={`${onTopOfHero ? "border-transparent" : "border-white/15"} border-b`}>
+        <Container className="py-4">
+          <div className="flex items-center justify-between gap-3">
 
-          <nav className="hidden items-center gap-1 md:flex">
-            {nav.map((item) => (
+            {/* Logo — oculto en el top del hero para no repetirlo con el del banner */}
+            {onTopOfHero ? (
+              <div className="h-9 w-36 sm:h-10 sm:w-40" aria-hidden="true" />
+            ) : (
               <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cilantro/20 ${
-                  onTopOfHero
-                    ? "text-bone/90 hover:bg-white/10 hover:text-bone"
-                    : "text-charcoal/85 hover:bg-black/[0.04] hover:text-charcoal"
-                }`}
+                href="/"
+                className="group inline-flex items-center gap-3 rounded-md px-1 py-1 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30"
               >
-                {item.label}
+                <span className="relative h-9 w-36 sm:h-10 sm:w-40">
+                  {/* Siempre logo blanco sobre fondo cilantro */}
+                  <Image
+                    src="/old-site/images/logos/logo_blanco.png"
+                    alt="Taqueria El Tepeyac"
+                    fill
+                    sizes="160px"
+                    className="object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
+                    priority
+                  />
+                </span>
               </Link>
-            ))}
-          </nav>
+            )}
 
-          <div className="hidden items-center gap-2 md:flex">
-            <ExternalButtonLink
-              href={restaurant.orderUrl}
-              tone="salsa"
-              className={onTopOfHero ? "shadow-[0_18px_55px_rgba(0,0,0,0.22)]" : ""}
+            {/* Nav — sin la página actual */}
+            <nav className="hidden items-center gap-6 md:flex">
+              {visibleNav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`group relative text-sm font-semibold tracking-[0.08em] uppercase transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 ${
+                    onTopOfHero ? "text-bone/90 hover:text-bone" : "text-bone/90 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                  <span
+                    aria-hidden="true"
+                    className="absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-white/70 transition-transform duration-300 group-hover:scale-x-100"
+                  />
+                </Link>
+              ))}
+            </nav>
+
+            {/* Botón "Ordenar en línea" — oculto en el top, visible al hacer scroll */}
+            <div className="hidden items-center gap-2 md:flex">
+              {onTopOfHero ? (
+                <div className="h-10 w-40" aria-hidden="true" />
+              ) : (
+                <a
+                  href={restaurant.orderUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative inline-flex items-center overflow-hidden bg-white px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.1em] text-cilantro transition-all duration-300 hover:bg-maiz hover:text-charcoal hover:shadow-[0_4px_20px_rgba(0,0,0,0.22)] active:scale-[0.98]"
+                >
+                  {/* Efecto de barrido en hover */}
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 -translate-x-full bg-maiz transition-transform duration-300 ease-out group-hover:translate-x-0"
+                  />
+                  <span className="relative">Ordenar en línea</span>
+                </a>
+              )}
+            </div>
+
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              aria-label={open ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={open}
+              onClick={() => setOpen((v) => !v)}
+              className={`md:hidden inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold tracking-[0.12em] uppercase focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 ${
+                onTopOfHero
+                  ? "border border-white/25 bg-white/10 text-bone"
+                  : "border border-white/30 bg-white/15 text-bone"
+              }`}
             >
-              Order Now
-            </ExternalButtonLink>
+              <span className="mr-2 font-mono text-[11px] text-bone/80">Menú</span>
+              <span className="relative h-3.5 w-4">
+                <span
+                  className={`absolute left-0 top-0 h-[2px] w-4 rounded-full bg-bone transition-transform duration-300 ${open ? "translate-y-[6px] rotate-45" : ""}`}
+                />
+                <span
+                  className={`absolute left-0 top-[6px] h-[2px] w-4 rounded-full bg-bone transition-opacity duration-300 ${open ? "opacity-0" : "opacity-100"}`}
+                />
+                <span
+                  className={`absolute left-0 top-[12px] h-[2px] w-4 rounded-full bg-bone transition-transform duration-300 ${open ? "translate-y-[-6px] -rotate-45" : ""}`}
+                />
+              </span>
+            </button>
           </div>
 
-          <button
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className={`md:hidden inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold shadow-[0_10px_20px_rgba(0,0,0,0.10)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cilantro/20 ${
-              onTopOfHero
-                ? "border border-white/20 bg-white/10 text-bone"
-                : "border border-border bg-card text-charcoal"
-            }`}
-          >
-            <span className={`mr-2 font-mono text-xs ${onTopOfHero ? "text-bone/75" : "text-charcoal/70"}`}>
-              MENU
-            </span>
-            <span className="relative h-3.5 w-4">
-              <span
-                className={`absolute left-0 top-0 h-[2px] w-4 rounded-full transition-transform duration-300 ${
-                  onTopOfHero ? "bg-bone" : "bg-charcoal"
-                } ${
-                  open ? "translate-y-[6px] rotate-45" : ""
-                }`}
-              />
-              <span
-                className={`absolute left-0 top-[6px] h-[2px] w-4 rounded-full transition-opacity duration-300 ${
-                  onTopOfHero ? "bg-bone" : "bg-charcoal"
-                } ${
-                  open ? "opacity-0" : "opacity-100"
-                }`}
-              />
-              <span
-                className={`absolute left-0 top-[12px] h-[2px] w-4 rounded-full transition-transform duration-300 ${
-                  onTopOfHero ? "bg-bone" : "bg-charcoal"
-                } ${
-                  open ? "translate-y-[-6px] -rotate-45" : ""
-                }`}
-              />
-            </span>
-          </button>
-        </div>
+          {/* Mobile dropdown */}
+          {open ? (
+            <div className="md:hidden mt-4 pb-3">
+              <div className="overflow-hidden rounded-2xl bg-white p-3 shadow-[0_20px_55px_rgba(0,0,0,0.18)]">
+                <div className="px-2 pb-2 pt-1">
+                  <div className="text-[11px] font-mono tracking-[0.24em] text-charcoal/60">
+                    EL TEPEYAC · EAST HARLEM
+                  </div>
+                  <div className="mt-3 ornament" />
+                </div>
 
-        {open ? (
-          <div className="md:hidden mt-4 pb-3">
-            <div className="rounded-3xl border border-border bg-card p-3 shadow-[0_20px_50px_rgba(0,0,0,0.08)]">
-              <div className="grid gap-1">
-                {nav.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
+                <div className="grid gap-1 px-1 pt-2">
+                  {visibleNav.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold text-charcoal/90 hover:bg-black/[0.03] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cilantro/20"
+                    >
+                      {item.label}
+                      <span className="text-xs font-mono text-charcoal/55">→</span>
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="mt-3 px-1">
+                  <a
+                    href={restaurant.orderUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={() => setOpen(false)}
-                    className="flex items-center justify-between rounded-2xl px-4 py-3 text-base font-semibold text-charcoal hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cilantro/20"
+                    className="flex w-full items-center justify-center rounded-xl bg-salsa px-5 py-3.5 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
                   >
-                    {item.label}
-                    <span className="text-xs font-mono text-charcoal/55">→</span>
-                  </Link>
-                ))}
-              </div>
-              <div className="mt-3 px-1">
-                <ExternalButtonLink href={restaurant.orderUrl} className="w-full justify-center">
-                  Order Now
-                </ExternalButtonLink>
-              </div>
-              <div className="mt-3 px-4 pb-2 text-xs text-muted">
-                {restaurant.hours} ·{" "}
-                <a className="underline underline-offset-4" href={`tel:${restaurant.phoneE164}`}>
-                  {restaurant.phoneDisplay}
-                </a>
+                    Ordenar en línea
+                  </a>
+                </div>
+
+                <div className="mt-4 px-4 pb-3 text-xs text-charcoal/70">
+                  <div className="text-[11px] font-mono tracking-[0.22em] text-charcoal/55">HORARIO</div>
+                  <div className="mt-1">{restaurant.hours}</div>
+                  <div className="mt-3 text-[11px] font-mono tracking-[0.22em] text-charcoal/55">TELÉFONO</div>
+                  <a className="mt-1 inline-block underline underline-offset-4 decoration-black/20" href={`tel:${restaurant.phoneE164}`}>
+                    {restaurant.phoneDisplay}
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        ) : null}
-      </Container>
+          ) : null}
+        </Container>
+      </div>
     </header>
   );
 }
-

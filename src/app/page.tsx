@@ -1,135 +1,310 @@
 import Image from "next/image";
-import { ExternalButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { restaurant } from "@/lib/restaurant";
+import { restaurant, popularDishes } from "@/lib/restaurant";
+import Link from "next/link";
+import { ParallaxSection } from "@/components/ui/ParallaxSection";
+
+// REEMPLAZA este ID con el de tu video de YouTube
+const YOUTUBE_VIDEO_ID = "TODO_AGREGAR_ID_VIDEO";
 
 export default function Home() {
   return (
     <div>
-      {/* HERO (photo-led like the old site) */}
-      <section className="relative h-[68vh] min-h-[520px] w-full overflow-hidden">
-        <Image
-          src="/old-site/images/home/abril-4.jpg"
-          alt="El Tepeyac interior colors and banners"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/65" />
+      {/* ── Hero — envuelto en -mt para quedar detrás del header ──────── */}
+      <div className="-mt-[68px] sm:-mt-[72px]">
+        <ParallaxSection
+          image={{
+            src: "/old-site/images/home/DSC00014.jpg",
+            alt: "El Tepeyac — interior cálido",
+            priority: true,
+            sizes: "100vw",
+          }}
+          className="h-[100vh] min-h-[680px]"
+          strength={350}
+          overlay={
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/25 to-black/85" />
+          }
+        >
+          <Container className="relative flex h-full flex-col items-center pt-[72px] text-center">
+            {/* Bloque central — ocupa el espacio disponible y centra su contenido */}
+            <div className="flex flex-1 w-full items-center justify-center">
+              <div className="w-full max-w-4xl">
+                <div className="mx-auto mb-8 h-16 w-56 sm:h-20 sm:w-72 relative">
+                  <Image
+                    src="/old-site/images/logos/logo_blanco.png"
+                    alt="Taqueria El Tepeyac"
+                    fill
+                    sizes="290px"
+                    className="object-contain drop-shadow-[0_6px_28px_rgba(0,0,0,0.55)]"
+                  />
+                </div>
 
-        <Container className="relative flex h-full items-center justify-center py-16">
-          <div className="text-center">
-            <div className="mx-auto relative h-16 w-64 sm:h-20 sm:w-80">
-              <Image
-                src="/old-site/images/logos/logo_blanco.png"
-                alt="Taqueria El Tepeyac"
-                fill
-                sizes="320px"
-                className="object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.55)]"
-              />
-            </div>
-            <div className="mt-6 text-xs font-semibold tracking-[0.26em] text-white/85">
-              {restaurant.taglineEN.toUpperCase()}
-            </div>
-          </div>
-        </Container>
-      </section>
+                <h1 className="text-5xl font-light leading-[0.93] text-white sm:text-7xl lg:text-8xl [text-shadow:0_2px_24px_rgba(0,0,0,0.35)]">
+                  Comida Tradicional
+                  <br />
+                  <span className="text-white/95">Mexicana</span>
+                </h1>
 
-      {/* GUACAMOLE (full-bleed background image) */}
-      <section className="relative w-full overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png"
-            alt="Avocados for guacamole"
-            fill
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-black/35" />
-        </div>
-
-        <Container className="relative py-20 sm:py-28">
-          <div className="text-center text-white">
-            <h2 className="text-4xl font-extrabold tracking-[0.08em] sm:text-5xl">
-              GUACAMOLE
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm text-white/85">
-              This is how we made our famous signature Guacamole
-            </p>
-          </div>
-
-          <div className="mx-auto mt-10 max-w-3xl">
-            <div className="relative overflow-hidden rounded-sm border border-white/25 bg-black/35 shadow-[0_25px_80px_rgba(0,0,0,0.35)]">
-              <div className="relative aspect-video">
-                <Image
-                  src="/old-site/images/logos/logo_guac.png"
-                  alt="Guacamole signature visual"
-                  fill
-                  sizes="800px"
-                  className="object-cover opacity-90"
-                />
-                <div className="absolute inset-0 bg-black/25" />
-                <div className="absolute inset-0 grid place-items-center">
-                  <div className="grid h-16 w-16 place-items-center rounded-full border border-white/55 bg-black/35">
-                    <div className="ml-1 h-0 w-0 border-y-[10px] border-y-transparent border-l-[16px] border-l-white/90" />
-                  </div>
+                <div className="mt-10 flex flex-wrap justify-center gap-4">
+                  <a
+                    href={restaurant.orderUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center bg-salsa px-8 py-4 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
+                  >
+                    Ordenar en línea
+                  </a>
+                  <Link
+                    href="/gallery"
+                    className="inline-flex items-center bg-cilantro px-8 py-4 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
+                  >
+                    Nuestro menú
+                  </Link>
                 </div>
               </div>
             </div>
 
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <ExternalButtonLink href={restaurant.orderUrl} tone="salsa">
-                Order Now
-              </ExternalButtonLink>
-              <a
-                className="text-sm font-semibold text-white/85 underline underline-offset-4 decoration-white/40 hover:decoration-white/80"
-                href={`tel:${restaurant.phoneE164}`}
-              >
-                {restaurant.phoneDisplay}
-              </a>
+            {/* Barra de horario — anclada al fondo */}
+            <div className="w-full max-w-4xl pb-8">
+              <div className="flex w-full items-center gap-8 border-t border-white/85 pt-6">
+                <div className="text-lg text-white/85">{restaurant.hours}</div>
+                <div className="ml-auto hidden text-[15px] font-mono tracking-[0.28em] uppercase text-white/85 md:block">
+                  {restaurant.addressLine1}
+                </div>
+              </div>
+            </div>
+          </Container>
+        </ParallaxSection>
+      </div>
+
+      {/* ── Intro ─────────────────────────────────────────────────────── */}
+      <section className="py-28 sm:py-28">
+        <Container>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="mt-8 text-4xl leading-[1.05] sm:text-5xl lg:text-6xl">
+              Auténtico sabor mexicano
+            </h2>
+            <p className="mx-auto mt-8 max-w-lg text-lg leading-8 text-charcoal/65">
+              En el corazón de East Harlem, servimos tradición, ingredientes reales y
+              un ambiente acogedor que te hace sentir en casa desde el primer momento.
+            </p>
+            <div className="mx-auto mt-10 ornament max-w-xs" />
+            <div className="mt-10 flex flex-wrap justify-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.22em] text-charcoal/40">
+              {["Guacamole", "Tacos", "Burritos", "Enchiladas", "Quesadillas", "Tamales", "Caldos", "Huaraches", "Guisos", "Nachos", "Comida Peruana"].map(
+                (item, i, arr) => (
+                  <span key={item} className="flex items-center gap-6">
+                    {item}
+                    {i < arr.length - 1 && (
+                      <span className="text-charcoal/20" aria-hidden="true">·</span>
+                    )}
+                  </span>
+                )
+              )}
             </div>
           </div>
         </Container>
       </section>
 
-      {/* STORY (deep red block with round photo) */}
-      <section className="w-full bg-[radial-gradient(circle_at_20%_10%,rgba(255,255,255,0.12),transparent_45%),linear-gradient(180deg,#b41616,#3a0202)] py-20 sm:py-24">
+      {/* ── Photo filmstrip (edge-to-edge, sin bordes) ────────────────── */}
+      <div className="flex h-64 sm:h-[26rem]">
+        {[
+          { src: "/old-site/images/home/abril-4.jpg", flex: 2 },
+          { src: "/old-site/images/home/DSC00014.jpg", flex: 1 },
+          { src: "/old-site/images/contact/tepeyac-mayo-1.jpg", flex: 1 },
+          { src: "/old-site/images/contact/tepeyac-mayo-4.jpg", flex: 1 },
+        ].map(({ src, flex }) => (
+          <div key={src} className="relative overflow-hidden" style={{ flex }}>
+            <Image src={src} alt="El Tepeyac" fill sizes="33vw" className="object-cover" />
+          </div>
+        ))}
+      </div>
+
+      {/* ── Especialidades ────────────────────────────────────────────── */}
+      <section className="py-18 sm:py-18">
         <Container>
-          <div className="grid items-center gap-10 md:grid-cols-[340px_1fr]">
-            <div className="mx-auto">
-              <div className="relative h-56 w-56 overflow-hidden rounded-full border-4 border-white/15 shadow-[0_25px_80px_rgba(0,0,0,0.35)]">
-                <Image
-                  src="/old-site/images/home/DSC00751.png"
-                  alt="El Tepeyac storefront"
-                  fill
-                  sizes="260px"
-                  className="object-cover"
-                />
+          <div className="grid gap-16 lg:grid-cols-2 lg:gap-28">
+            <div className="flex flex-col justify-center">
+              <h2 className="mt-7 text-4xl leading-[1.0] sm:text-5xl">
+                Platos que tienes que probar!
+              </h2>
+              <p className="mt-7 max-w-md text-base leading-7 text-charcoal/65">
+                Recetas insignia de la casa, no te puedes perder estas especialidades tradicionales Mexicanas.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 content-start gap-x-10">
+              {popularDishes.map((dish) => (
+                <div key={dish.id} className="border-b border-black/10 py-5">
+                  <div className="mt-1.5 text-3xl font-semibold text-charcoal">{dish.name}</div>
+                  <div
+                    className={`text-[11px] font-mono tracking-[0.28em] uppercase ${dish.accent === "cilantro"
+                      ? "text-cilantro"
+                      : dish.accent === "salsa"
+                        ? "text-salsa"
+                        : "text-oaxaca"
+                      }`}
+                  >
+                    {dish.note}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-wrap justify-center">
+            <div>
+              <div className="mt-10">
+                <a
+                  href={restaurant.orderUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center bg-salsa px-7 py-4 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
+                >
+                  Ver menú completo
+                </a>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ── Guacamole + Video ─────────────────────────────────────────── */}
+      <section className="bg-cilantro/8">
+        {/* Banda de texto */}
+        <Container className="py-20 sm:py-24">
+          <div className="grid gap-14 lg:grid-cols-2 lg:gap-20 lg:items-center">
+            <div>
+              <div className="text-[10px] font-mono tracking-[0.36em] uppercase text-cilantro/70">
+                Nuestra especialidad
+              </div>
+              <h2 className="mt-6 text-4xl leading-[1.0] text-charcoal sm:text-5xl">
+                Fresco,{" "}
+                <span className="text-charcoal/55">siempre al momento.</span>
+              </h2>
+              <p className="mt-6 text-base leading-7 text-charcoal/65">
+                Tomate, cebolla, cilantro, serranos, limón, aguacate. Sin más secretos.
+                El guacamole que se te graba en la memoria desde la primera probada.
+              </p>
+              <div className="mt-3 text-sm text-charcoal/50">
+                <span className="font-semibold text-charcoal/70">Ingredientes:</span>{" "}
+                tomate, cebolla, cilantro, serranos, limón, aguacate.
+              </div>
+              <div className="mt-10">
+                <a
+                  href={restaurant.orderUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center bg-cilantro px-7 py-4 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
+                >
+                  Ordenar guacamole
+                </a>
               </div>
             </div>
 
-            <div className="text-white">
-              <h3 className="text-2xl font-extrabold tracking-[0.08em] sm:text-3xl">
-                EN TEPEYAC…
-              </h3>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-white/88">
-                Creemos que la comida sabe mejor cuando se comparte. Cada plato que servimos
-                está inspirado en las recetas de nuestra familia, transmitidas de generación
-                en generación. Aquí no solo vienes a comer — vienes a sentirte parte de algo
-                más grande: un espacio donde la tradición mexicana, el sabor auténtico y el
-                calor humano se mezclan para crear momentos que se convierten en recuerdos.
-              </p>
+            {/* Video de YouTube — reemplaza YOUTUBE_VIDEO_ID */}
+            <div className="relative aspect-video w-full overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.16)]">
+              {YOUTUBE_VIDEO_ID === "TODO_AGREGAR_ID_VIDEO" ? (
+                /* Placeholder hasta que se agregue el ID del video */
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-charcoal/8">
+                  <div className="text-[10px] font-mono tracking-[0.28em] uppercase text-charcoal/40">
+                    Video · Próximamente
+                  </div>
+                  <div className="relative mt-4 h-48 w-full overflow-hidden">
+                    <Image
+                      src="/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png"
+                      alt="Guacamole El Tepeyac"
+                      fill
+                      sizes="600px"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/20" />
+                  </div>
+                </div>
+              ) : (
+                <iframe
+                  src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?rel=0&modestbranding=1`}
+                  title="El Tepeyac — Guacamole"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 h-full w-full"
+                />
+              )}
             </div>
           </div>
         </Container>
+
+        {/* Imagen full-bleed de los aguacates */}
+        <div className="relative h-56 overflow-hidden sm:h-72">
+          <Image
+            src="/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png"
+            alt="Aguacates frescos"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-cilantro/20" />
+        </div>
       </section>
 
-      <section className="w-full bg-white py-14">
+      {/* ── Historia — ÚLTIMA SECCIÓN ─────────────────────────────────── */}
+      <section className="bg-charcoal py-28 sm:py-36 text-bone">
         <Container>
-          <h2 className="text-center text-xl font-extrabold tracking-[0.08em] text-charcoal sm:text-2xl">
-            OUR RESTAURANT, OUR FAMILY
-          </h2>
+          <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 lg:items-center">
+            <div>
+              <div className="text-[10px] font-mono tracking-[0.36em] uppercase text-bone/45">
+                Historia
+              </div>
+              <h2 className="mt-7 text-4xl leading-[1.0] text-bone sm:text-5xl">
+                Recetas que pasan de mano en mano.
+              </h2>
+              <p className="mt-7 text-base leading-7 text-bone/75">
+                Creemos que la comida sabe mejor cuando se comparte. Cada plato está inspirado
+                en tradiciones mexicanas — hecho con sazón, cariño y rapidez. Aquí no solo
+                vienes a comer: vienes a sentirte en casa.
+              </p>
+              <p className="mt-5 text-base leading-7 text-bone/75">
+                Desde East Harlem, llevamos la cocina de México a tu mesa todos los días de
+                la semana, de 8 de la mañana a 11 de la noche.
+              </p>
+
+              <div className="mt-12 flex flex-wrap items-center gap-5">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center bg-maiz px-7 py-4 text-sm font-semibold uppercase tracking-wider text-charcoal transition hover:brightness-95"
+                >
+                  Contáctanos
+                </Link>
+                <a
+                  href={restaurant.orderUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-bone/70 underline underline-offset-4 decoration-bone/25 hover:decoration-bone/60 transition"
+                >
+                  Ordenar en línea →
+                </a>
+              </div>
+            </div>
+
+            {/* Imagen storefront — sin bordes, sin radius */}
+            <div className="relative w-full overflow-hidden" style={{ aspectRatio: "4/5" }}>
+              <Image
+                src="/old-site/images/home/DSC00751.png"
+                alt="Fachada de El Tepeyac"
+                fill
+                sizes="640px"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/50 via-transparent to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <div className="text-[10px] font-mono tracking-[0.28em] uppercase text-bone/65">
+                  Visítanos
+                </div>
+                <div className="mt-2 text-base font-semibold text-bone">
+                  {restaurant.addressLine1}
+                </div>
+                <div className="text-sm text-bone/75">{restaurant.addressLine2}</div>
+              </div>
+            </div>
+          </div>
         </Container>
       </section>
     </div>

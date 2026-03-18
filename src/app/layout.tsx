@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { IBM_Plex_Sans, IBM_Plex_Mono, Montserrat } from "next/font/google";
+import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 
-const heading = Montserrat({
+const heading = Fraunces({
   variable: "--font-heading",
   subsets: ["latin"],
   display: "swap",
+  // Fraunces supports variable weights; keep it responsive and elegant.
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 const body = IBM_Plex_Sans({
@@ -31,12 +33,12 @@ export const metadata: Metadata = {
     template: "%s | El Tepeyac Taqueria",
   },
   description:
-    "Authentic and traditional Mexican cuisine in East Harlem. Fresh, made-with-love favorites — famous guacamole, tacos, burritos, and more.",
+    "Cocina mexicana auténtica y tradicional en East Harlem. Favoritos frescos hechos con cariño — guacamole famoso, tacos, burritos y más.",
   metadataBase: new URL("https://eltepeyac.example"),
   openGraph: {
     title: "El Tepeyac Taqueria",
     description:
-      "Authentic and traditional Mexican cuisine in East Harlem. Order online and visit us on Lexington Ave.",
+      "Cocina mexicana auténtica y tradicional en East Harlem. Ordena en línea y visítanos en Lexington Ave.",
     type: "website",
   },
 };
@@ -47,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="es" className="scroll-smooth">
       <body className={`${heading.variable} ${body.variable} ${mono.variable} antialiased`}>
         <Script
           id="restaurant-jsonld"

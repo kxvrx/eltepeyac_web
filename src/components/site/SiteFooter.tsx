@@ -4,29 +4,54 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-20 border-t border-border bg-charcoal text-bone">
-      <Container className="py-14">
-        <div className="grid gap-10 md:grid-cols-3">
-          <div>
-            <div className="text-lg font-semibold tracking-tight">{restaurant.name}</div>
-            <p className="mt-3 max-w-sm text-sm text-bone/75">
-              Food tastes better when it’s shared. Family recipes, made fresh — fast, warm,
-              and authentic.
+    <footer className="bg-charcoal text-bone">
+      <Container className="py-20 sm:py-24">
+        <div className="grid gap-14 md:grid-cols-12">
+          {/* Brand */}
+          <div className="md:col-span-5">
+            <div className="text-[10px] font-mono tracking-[0.34em] uppercase text-bone/45">
+              Taqueria · East Harlem · NYC
+            </div>
+            <div className="mt-5 text-3xl font-light tracking-tight text-bone">
+              {restaurant.name}
+            </div>
+            <p className="mt-5 max-w-sm text-sm leading-7 text-bone/60">
+              La comida sabe mejor cuando se comparte. Recetas de familia, hechas al momento
+              — rápido, cálido y auténtico.
             </p>
-            <p className="mt-6 text-xs font-mono tracking-[0.2em] text-bone/60">
-              AUTHENTIC · EAST HARLEM · NYC
-            </p>
+
+            <div className="mt-10 h-px bg-gradient-to-r from-transparent via-bone/20 to-transparent" />
+
+            <div className="mt-8 flex flex-wrap gap-6 text-sm text-bone/70">
+              <a
+                className="underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
+                href={`tel:${restaurant.phoneE164}`}
+              >
+                {restaurant.phoneDisplay}
+              </a>
+              <a
+                className="underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
+                href={restaurant.orderUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ordenar en línea
+              </a>
+            </div>
           </div>
 
-          <div>
-            <div className="text-xs font-mono tracking-[0.2em] text-bone/60">HOURS</div>
-            <div className="mt-2 text-sm text-bone/80">{restaurant.hours}</div>
+          {/* Horario + Ubicación */}
+          <div className="md:col-span-3">
+            <div className="text-[10px] font-mono tracking-[0.34em] uppercase text-bone/45">
+              Horario
+            </div>
+            <div className="mt-4 text-sm leading-7 text-bone/70">{restaurant.hours}</div>
 
-            <div className="mt-7 text-xs font-mono tracking-[0.2em] text-bone/60">
-              LOCATION
+            <div className="mt-10 text-[10px] font-mono tracking-[0.34em] uppercase text-bone/45">
+              Ubicación
             </div>
             <a
-              className="mt-2 inline-block text-sm text-bone/80 underline underline-offset-4 decoration-bone/30 hover:decoration-bone/70"
+              className="mt-4 inline-block text-sm leading-7 text-bone/70 underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                 restaurant.mapQuery
               )}`}
@@ -39,51 +64,50 @@ export function SiteFooter() {
             </a>
           </div>
 
-          <div>
-            <div className="text-xs font-mono tracking-[0.2em] text-bone/60">CONTACT</div>
-            <div className="mt-2 grid gap-2 text-sm">
-              <a
-                className="text-bone/80 underline underline-offset-4 decoration-bone/30 hover:decoration-bone/70"
-                href={`tel:${restaurant.phoneE164}`}
-              >
-                {restaurant.phoneDisplay}
-              </a>
+          {/* Páginas + nota */}
+          <div className="md:col-span-4">
+            <div className="text-[10px] font-mono tracking-[0.34em] uppercase text-bone/45">
+              Páginas
+            </div>
+            <div className="mt-4 grid gap-3 text-sm">
               <Link
-                href="/contact"
-                className="text-bone/80 underline underline-offset-4 decoration-bone/30 hover:decoration-bone/70"
+                className="w-fit text-bone/70 underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
+                href="/"
               >
-                Contact page
+                Inicio
               </Link>
               <Link
+                className="w-fit text-bone/70 underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
                 href="/gallery"
-                className="text-bone/80 underline underline-offset-4 decoration-bone/30 hover:decoration-bone/70"
               >
-                Gallery
+                Galería
+              </Link>
+              <Link
+                className="w-fit text-bone/70 underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
+                href="/contact"
+              >
+                Contacto
               </Link>
             </div>
 
-            <div className="mt-7 rounded-2xl bg-bone/5 p-4">
-              <div className="text-xs font-mono tracking-[0.2em] text-bone/60">
-                ORDER ONLINE
+            <div className="mt-12 border-l border-bone/15 pl-6">
+              <div className="text-[10px] font-mono tracking-[0.28em] uppercase text-bone/45">
+                Catering
               </div>
-              <a
-                href={restaurant.orderUrl}
-                className="mt-2 inline-flex items-center gap-2 rounded-full bg-salsa px-4 py-2 text-sm font-semibold text-bone hover:brightness-[0.97]"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Order Now <span aria-hidden="true">→</span>
-              </a>
+              <p className="mt-3 text-sm leading-6 text-bone/55">
+                Para pedidos grandes y eventos, usa la página de contacto — respondemos rápido.
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-bone/10 pt-6 text-xs text-bone/55 md:flex-row md:items-center md:justify-between">
-          <div>© {new Date().getFullYear()} {restaurant.name}. All rights reserved.</div>
-          <div className="font-mono tracking-[0.18em]">MADE WITH CILANTRO & CARE</div>
+        <div className="mt-16 flex flex-col gap-2 border-t border-bone/10 pt-7 text-xs text-bone/40 md:flex-row md:items-center md:justify-between">
+          <div>
+            © {new Date().getFullYear()} {restaurant.name}. Todos los derechos reservados.
+          </div>
+          <div className="font-mono tracking-[0.22em] uppercase">Hecho con maíz y cariño</div>
         </div>
       </Container>
     </footer>
   );
 }
-

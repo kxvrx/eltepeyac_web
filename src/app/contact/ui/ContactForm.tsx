@@ -8,73 +8,84 @@ const initialState: ContactState = { ok: false, message: "" };
 export default function ContactForm() {
   const [state, formAction, pending] = useActionState(sendContact, initialState);
 
+  const fieldClass =
+    "h-12 w-full border-b border-black/20 bg-transparent px-0 text-sm text-charcoal outline-none placeholder:text-charcoal/35 focus:border-charcoal/60 transition";
+
   return (
-    <form action={formAction} className="grid gap-4">
+    <form action={formAction} className="grid gap-8">
       <div className="grid gap-2">
-        <label className="text-sm font-semibold text-charcoal" htmlFor="name">
-          NAME
+        <label
+          className="text-[10px] font-mono tracking-[0.32em] uppercase text-charcoal/45"
+          htmlFor="name"
+        >
+          Nombre
         </label>
         <input
           id="name"
           name="name"
-          placeholder="Your name"
-          className="h-12 w-full border border-black/15 bg-neutral-100 px-4 text-sm text-charcoal outline-none placeholder:text-charcoal/40 focus:border-black/35 focus:bg-white"
+          placeholder="Tu nombre"
+          className={fieldClass}
           required
         />
       </div>
 
       <div className="grid gap-2">
-        <label className="text-sm font-semibold text-charcoal" htmlFor="email">
-          EMAIL
+        <label
+          className="text-[10px] font-mono tracking-[0.32em] uppercase text-charcoal/45"
+          htmlFor="email"
+        >
+          Correo
         </label>
         <input
           id="email"
           name="email"
           type="email"
-          placeholder="you@email.com"
-          className="h-12 w-full border border-black/15 bg-neutral-100 px-4 text-sm text-charcoal outline-none placeholder:text-charcoal/40 focus:border-black/35 focus:bg-white"
+          placeholder="tu@correo.com"
+          className={fieldClass}
           required
         />
       </div>
 
       <div className="grid gap-2">
-        <label className="text-sm font-semibold text-charcoal" htmlFor="message">
-          MESSAGE
+        <label
+          className="text-[10px] font-mono tracking-[0.32em] uppercase text-charcoal/45"
+          htmlFor="message"
+        >
+          Mensaje
         </label>
         <textarea
           id="message"
           name="message"
-          placeholder="How can we help?"
-          rows={6}
-          className="w-full border border-black/15 bg-neutral-100 px-4 py-3 text-sm text-charcoal outline-none placeholder:text-charcoal/40 focus:border-black/35 focus:bg-white"
+          placeholder="¿Cómo te podemos ayudar?"
+          rows={5}
+          className="w-full resize-none border-b border-black/20 bg-transparent px-0 py-2 text-sm text-charcoal outline-none placeholder:text-charcoal/35 focus:border-charcoal/60 transition"
           required
         />
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+      <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
         <button
           type="submit"
           disabled={pending}
-          className="h-12 rounded-sm bg-[#f2cc2f] px-8 text-sm font-semibold text-charcoal shadow-[0_14px_35px_rgba(0,0,0,0.12)] hover:brightness-[0.98] disabled:opacity-60"
+          className="inline-flex items-center bg-maiz px-8 py-4 text-sm font-semibold uppercase tracking-wider text-charcoal transition hover:brightness-95 disabled:opacity-50"
         >
-          {pending ? "Sending…" : "Submit"}
+          {pending ? "Enviando…" : "Enviar mensaje"}
         </button>
 
         {state.message ? (
           <div
-            className={`text-sm ${
-              state.ok ? "text-cilantro" : "text-charcoal/70"
-            }`}
+            className={`text-sm ${state.ok ? "text-cilantro" : "text-charcoal/60"}`}
             role="status"
             aria-live="polite"
           >
             {state.message}
           </div>
         ) : (
-          <div className="text-xs text-charcoal/60">Fields marked required.</div>
+          <div className="text-xs text-charcoal/45 font-mono tracking-[0.18em]">
+            Todos los campos son obligatorios.
+          </div>
         )}
       </div>
     </form>
   );
 }
-
