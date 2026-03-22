@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { GalleryClient } from "./ui/GalleryClient";
 import { restaurant } from "@/lib/restaurant";
 import { Container } from "@/components/ui/Container";

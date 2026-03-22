@@ -9,6 +9,12 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Solo NEXT_PUBLIC_SITE_URL se necesita en build (para metadatos)
+# Las credenciales de Cloudinary y Resend solo se necesitan en runtime
+ARG NEXT_PUBLIC_SITE_URL=https://eltepeyactaqueria.com
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+
 RUN npm run build
 
 # ── Etapa 3: Runner (imagen final mínima) ──────────────────────────────────────
@@ -34,5 +40,4 @@ USER nextjs
 
 EXPOSE 3000
 
-# Next.js standalone arranca con node server.js (no necesita npm)
 CMD ["node", "server.js"]

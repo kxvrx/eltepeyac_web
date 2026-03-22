@@ -27,7 +27,7 @@ const mono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://eltepeyactaqueria.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://eltepeyactaqueria.com";
 const ogImage = "https://res.cloudinary.com/kxvrx-cloudinary/image/upload/f_auto,q_auto,w_1200/home_DSC00751.png";
 
 export const metadata: Metadata = {

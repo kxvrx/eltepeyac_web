@@ -13,6 +13,11 @@ cloudinary.config({
 
 const BASE_TRANSFORM = "f_auto,q_auto";
 
+/** Retorna true si las credenciales de Cloudinary están disponibles. */
+function hasCredentials(): boolean {
+  return !!(process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
+}
+
 /**
  * Devuelve todas las URLs de imágenes cuyo public_id empiece con `prefix`.
  * Ej: fetchAlbumPhotos("altar_") → todas las fotos que se llamen altar_*.
@@ -27,6 +32,8 @@ export type PhotoMeta = {
 };
 
 export async function fetchAlbumPhotos(prefix: string): Promise<string[]> {
+  if (!hasCredentials()) return [];
+
   const result = await cloudinary.search
     .expression(`public_id:${prefix}*`)
     .sort_by("public_id", "asc")
@@ -44,6 +51,8 @@ export async function fetchAlbumPhotos(prefix: string): Promise<string[]> {
  * Usado en sub-galerías para renderizar masonry con proporciones naturales.
  */
 export async function fetchAlbumPhotosWithMeta(prefix: string): Promise<PhotoMeta[]> {
+  if (!hasCredentials()) return [];
+
   const result = await cloudinary.search
     .expression(`public_id:${prefix}*`)
     .sort_by("public_id", "asc")
