@@ -1,20 +1,15 @@
 import { Container } from "@/components/ui/Container";
 import Image from "next/image";
 import Link from "next/link";
+import { galleryAlbums } from "@/lib/gallery";
 
 export const metadata = {
   title: "Altar Día de Muertos",
   description: "Una historia de temporada: flores, velas y memoria.",
 };
 
-const photos = [
-  "/old-site/images/contact/tepeyac-mayo-4.jpg",
-  "/old-site/images/home/abril-4.jpg",
-  "/old-site/images/contact/tepeyac-mayo-1.jpg",
-  "/old-site/images/home/DSC00014.jpg",
-  "/old-site/images/contact/tepeyac-mayo-3.jpg",
-  "/old-site/images/home/DSC00751.png",
-] as const;
+const album = galleryAlbums.find((a) => a.slug === "altar")!;
+const photos = album.photos;
 
 export default function AltarDiaDeMuertosPage() {
   return (
@@ -60,14 +55,14 @@ export default function AltarDiaDeMuertosPage() {
             </div>
             <div className="mt-7 ornament" />
             <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {photos.map((src, idx) => (
+              {photos.map((photo, idx) => (
                 <div
-                  key={`${src}-${idx}`}
+                  key={`${photo.src}-${idx}`}
                   className={`relative overflow-hidden rounded-xl border border-border bg-paper shadow-[0_18px_55px_rgba(0,0,0,0.06)] ${
                     idx % 3 === 1 ? "aspect-[3/4]" : idx % 3 === 2 ? "aspect-[4/5]" : "aspect-[4/3]"
                   }`}
                 >
-                  <Image src={src} alt="Seasonal story placeholder" fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />
+                  <Image src={photo.src} alt="Seasonal story placeholder" fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-black/0" />
                 </div>
               ))}

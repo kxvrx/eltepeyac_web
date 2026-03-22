@@ -3,11 +3,14 @@ import { ExternalButtonLink } from "@/components/ui/Button";
 import { restaurant } from "@/lib/restaurant";
 import Image from "next/image";
 import Link from "next/link";
+import { galleryAlbums } from "@/lib/gallery";
 
 export const metadata = {
   title: "Galería de catering",
   description: "Montajes de catering y platos para eventos.",
 };
+
+const album = galleryAlbums.find((a) => a.slug === "catering")!;
 
 const tiles = [
   {
