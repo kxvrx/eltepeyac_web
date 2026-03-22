@@ -17,7 +17,7 @@ export function SiteFooter() {
           <div className="md:col-span-5 flex flex-col items-center justify-center">
             <div className="mt-5 relative h-20 w-64 sm:h-24 sm:w-80">
               <Image
-                src="/old-site/images/logos/logo_blanco.png"
+                src="https://res.cloudinary.com/kxvrx-cloudinary/image/upload/f_auto,q_auto/logo_blanco.png"
                 alt="Taqueria El Tepeyac"
                 fill
                 sizes="(max-width: 640px) 256px, 320px"

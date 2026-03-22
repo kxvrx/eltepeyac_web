@@ -7,7 +7,7 @@ export const restaurant = {
   phoneDisplay: "+1 (212) 814-4882",
   phoneE164: "+12128144882",
   hours: "Lun–Dom · 8:00 AM – 11:30 PM",
-  orderUrl: "https://getsauce.com/",
+  orderUrl: "https://www.getsauce.com/order/el-tepeyac-taqueria-97-st/menu?dispatch-type=pickup",
   mapQuery: "1505 Lexington Ave, New York, NY 10029",
 } as const;
 

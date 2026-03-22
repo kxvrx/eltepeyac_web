@@ -4,6 +4,7 @@ import ContactForm from "./ui/ContactForm";
 import Link from "next/link";
 import { ParallaxSection } from "@/components/ui/ParallaxSection";
 import { SocialSection } from "./ui/SocialSection";
+import { contactMayo3, contactMayo1 } from "@/lib/images";
 
 export const metadata = {
   title: "Contacto",
@@ -17,7 +18,7 @@ export default function ContactPage() {
       <div className="-mt-[68px] sm:-mt-[72px]">
         <ParallaxSection
           image={{
-            src: "/old-site/images/contact/tepeyac-mayo-3.jpg",
+            src: contactMayo3,
             alt: "El Tepeyac",
             priority: true,
             sizes: "100vw",
@@ -192,7 +193,7 @@ export default function ContactPage() {
       {/* ── Catering CTA ─────────────────────────────────────────────── */}
       <ParallaxSection
         image={{
-          src: "/old-site/images/contact/post.png",
+          src: contactMayo1,
           alt: "El Tepeyac catering y eventos",
           sizes: "100vw",
         }}

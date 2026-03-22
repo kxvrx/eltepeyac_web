@@ -91,7 +91,7 @@ export function SiteHeader() {
               >
                 <span className="relative h-9 w-36 sm:h-10 sm:w-40">
                   <Image
-                    src="/old-site/images/logos/logo_blanco.png"
+                    src="https://res.cloudinary.com/kxvrx-cloudinary/image/upload/f_auto,q_auto/logo_blanco.png"
                     alt="Taqueria El Tepeyac"
                     fill
                     sizes="160px"

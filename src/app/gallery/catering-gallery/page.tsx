@@ -1,127 +1,104 @@
-import { Container } from "@/components/ui/Container";
-import { ExternalButtonLink } from "@/components/ui/Button";
-import { restaurant } from "@/lib/restaurant";
 import Image from "next/image";
 import Link from "next/link";
+import { Container } from "@/components/ui/Container";
+import { restaurant } from "@/lib/restaurant";
+import { fetchAlbumPhotosWithMeta } from "@/lib/cloudinary-server";
 import { galleryAlbums } from "@/lib/gallery";
+import { SubAlbumClient } from "../ui/SubAlbumClient";
 
 export const metadata = {
-  title: "Galería de catering",
-  description: "Montajes de catering y platos para eventos.",
+  title: "Catering — El Tepeyac",
+  description: "Montajes, bandejas y platos para grupos de 10 a 500 personas.",
 };
 
-const album = galleryAlbums.find((a) => a.slug === "catering")!;
+export default async function CateringGalleryPage() {
+  const album  = galleryAlbums.find((a) => a.slug === "catering")!;
+  const photos = await fetchAlbumPhotosWithMeta(album.prefix);
 
-const tiles = [
-  {
-    src: "/old-site/images/home/abril-4.jpg",
-    title: "Almuerzo de oficina",
-    note: "Bandejas, guarniciones y montaje rápido.",
-    ratio: "aspect-[4/3]",
-  },
-  {
-    src: "/old-site/images/contact/tepeyac-mayo-1.jpg",
-    title: "Estilo familiar",
-    note: "Listo para servir, hecho al momento.",
-    ratio: "aspect-[3/4]",
-  },
-  {
-    src: "/old-site/images/home/DSC00014.jpg",
-    title: "Evento pequeño",
-    note: "Fácil de recoger, sabor cálido.",
-    ratio: "aspect-[4/5]",
-  },
-] as const;
-
-export default function CateringGalleryPage() {
   return (
-    <div>
-      <section className="py-14 sm:py-18">
+    <div className="bg-[#fafaf8]">
+      {/* ── Header ─────────────────────────────────────────────────────── */}
+      <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-12 lg:items-end">
-            <div className="lg:col-span-7">
-              <div className="text-[11px] font-mono tracking-[0.28em] text-charcoal/55">
-                CATERING
+          <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl">
+              <div className="font-mono text-[11px] tracking-[0.45em] uppercase text-cilantro">
+                {album.eyebrow}
               </div>
-              <h1 className="mt-4 text-5xl leading-[0.92] sm:text-6xl">Galería de catering</h1>
-              <p className="mt-6 max-w-2xl text-base leading-7 text-charcoal/75">
-                Un portafolio visual para eventos — diseñado para decidir rápido. Cambia estas
-                imágenes de ejemplo por fotos reales cuando quieras.
+              <h1 className="mt-4 text-5xl leading-[0.92] text-charcoal sm:text-6xl">
+                {album.title}
+              </h1>
+              <p className="mt-5 max-w-lg text-base leading-7 text-charcoal">
+                {album.subtitle}
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <ExternalButtonLink href={restaurant.orderUrl} tone="salsa" className="rounded-md">
-                  Ordenar / Cotizar
-                </ExternalButtonLink>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <a
+                  href={`tel:${restaurant.phoneE164}`}
+                  className="inline-flex items-center bg-cilantro px-7 py-3.5 text-sm font-semibold uppercase tracking-wider text-white transition hover:brightness-95"
+                >
+                  Consultar disponibilidad
+                </a>
                 <Link
                   href="/contact"
-                  className="rounded-md border border-border bg-paper px-5 py-3 text-sm font-semibold text-charcoal hover:bg-black/[0.02]"
+                  className="border-b border-charcoal/40 pb-0.5 text-sm font-semibold text-charcoal/70 transition-colors hover:border-charcoal hover:text-charcoal"
                 >
-                  Contactar catering
-                </Link>
-                <Link
-                  href="/gallery"
-                  className="text-sm font-semibold text-charcoal/75 underline underline-offset-4 decoration-black/20 hover:decoration-black/45"
-                >
-                  Volver a galería
+                  Enviar mensaje →
                 </Link>
               </div>
             </div>
-
-            <div className="lg:col-span-5">
-              <div className="paper grain overflow-hidden rounded-2xl p-7">
-                <div className="text-[11px] font-mono tracking-[0.28em] text-charcoal/55">
-                  NOTAS
-                </div>
-                <div className="mt-4 text-sm leading-6 text-charcoal/75">
-                  Agrega paquetes, mínimos y ventanas de recogida aquí. Este bloque funciona
-                  como un “insert” de menú: ideal para leer rápido.
-                </div>
-                <div className="mt-6 ornament" />
-                <div className="mt-6 grid gap-3 text-sm text-charcoal/75">
-                  <div>
-                    <span className="font-semibold text-charcoal">Rápido:</span> consulta → respuesta
-                  </div>
-                  <div>
-                    <span className="font-semibold text-charcoal">Flexible:</span> chico a grande
-                  </div>
-                  <div>
-                    <span className="font-semibold text-charcoal">Al momento:</span> hecho al pedir
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Link
+              href="/gallery"
+              className="w-fit border-b border-charcoal/40 pb-0.5 text-sm font-semibold text-charcoal/70 transition-colors hover:border-charcoal hover:text-charcoal"
+            >
+              ← Galería principal
+            </Link>
           </div>
         </Container>
       </section>
 
-      <section className="pb-16 sm:pb-20">
-        <Container>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 9 }).map((_, idx) => {
-              const t = tiles[idx % tiles.length];
-              return (
-                <div
-                  key={idx}
-                  className="relative overflow-hidden rounded-2xl border border-border bg-paper shadow-[0_18px_55px_rgba(0,0,0,0.06)]"
-                >
-                  <div className={`relative ${t.ratio}`}>
-                    <Image src={t.src} alt="Catering placeholder" fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-black/12 via-transparent to-black/0" />
-                  </div>
-                  <div className="paper border-t border-border px-6 py-5">
-                    <div className="text-[11px] font-mono tracking-[0.28em] text-charcoal/55">
-                      SETUP
-                    </div>
-                    <div className="mt-2 text-base font-semibold text-charcoal">{t.title}</div>
-                    <div className="mt-1 text-sm text-charcoal/70">{t.note}</div>
-                  </div>
-                </div>
-              );
-            })}
+      {/* ── Fotos ──────────────────────────────────────────────────────── */}
+      {photos.length === 0 ? (
+        <>
+          <section className="pb-10">
+            <Container>
+              <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-charcoal/12 py-28 text-center">
+                <p className="font-mono text-sm tracking-widest text-charcoal/35 uppercase">
+                  Álbum vacío
+                </p>
+                <p className="font-mono text-xs text-charcoal/25">
+                  Sube imágenes con el prefijo{" "}
+                  <code className="rounded bg-charcoal/5 px-1.5 py-0.5">catering_</code>{" "}
+                  en Cloudinary
+                </p>
+              </div>
+            </Container>
+          </section>
+          <SubAlbumClient photos={[]} albums={galleryAlbums} currentSlug={album.slug} />
+        </>
+      ) : (
+        <>
+          {/* Hero foto — full width */}
+          <div className="relative w-full" style={{ height: "clamp(380px, 58vw, 740px)" }}>
+            <Image
+              src={photos[0].src}
+              alt={album.title}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
           </div>
-        </Container>
-      </section>
+
+          {/* Masonry + Lightbox + Nav entre álbumes */}
+          <div className="pt-0.5">
+            <SubAlbumClient
+              photos={photos}
+              albums={galleryAlbums}
+              currentSlug={album.slug}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
-

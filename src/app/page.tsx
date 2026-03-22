@@ -3,6 +3,10 @@ import { Container } from "@/components/ui/Container";
 import { restaurant, popularDishes } from "@/lib/restaurant";
 import Link from "next/link";
 import { ParallaxSection } from "@/components/ui/ParallaxSection";
+import {
+  logoBlanco, homeInterior, homeAbril, homeGuacamole, homeHero,
+  contactMayo1, contactMayo4,
+} from "@/lib/images";
 
 
 export default function Home() {
@@ -12,7 +16,7 @@ export default function Home() {
       <div className="-mt-[68px] sm:-mt-[72px]">
         <ParallaxSection
           image={{
-            src: "/old-site/images/home/DSC00014.jpg",
+            src: homeInterior,
             alt: "El Tepeyac — interior cálido",
             priority: true,
             sizes: "100vw",
@@ -29,7 +33,7 @@ export default function Home() {
               <div className="w-full max-w-4xl">
                 <div className="mx-auto mb-8 h-16 w-56 sm:h-20 sm:w-72 relative">
                   <Image
-                    src="/old-site/images/logos/logo_blanco.png"
+                    src={logoBlanco}
                     alt="Taqueria El Tepeyac"
                     fill
                     sizes="290px"
@@ -107,10 +111,10 @@ export default function Home() {
       {/* ── Photo filmstrip (edge-to-edge, sin bordes) ────────────────── */}
       <div className="flex h-64 sm:h-[26rem]">
         {[
-          { src: "/old-site/images/home/abril-4.jpg", flex: 2 },
-          { src: "/old-site/images/home/DSC00014.jpg", flex: 1 },
-          { src: "/old-site/images/contact/tepeyac-mayo-1.jpg", flex: 1 },
-          { src: "/old-site/images/contact/tepeyac-mayo-4.jpg", flex: 1 },
+          { src: homeAbril,     flex: 2 },
+          { src: homeInterior,  flex: 1 },
+          { src: contactMayo1,  flex: 1 },
+          { src: contactMayo4,  flex: 1 },
         ].map(({ src, flex }) => (
           <div key={src} className="relative overflow-hidden" style={{ flex }}>
             <Image src={src} alt="El Tepeyac" fill sizes="33vw" className="object-cover" />
@@ -165,7 +169,7 @@ export default function Home() {
       {/* ── Guacamole + Video ─────────────────────────────────────────── */}
       <ParallaxSection
         image={{
-          src: "/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png",
+          src: homeGuacamole,
           alt: "Aguacates frescos El Tepeyac",
           sizes: "100vw",
         }}
@@ -311,7 +315,7 @@ export default function Home() {
             {/* Imagen storefront */}
             <div className="relative w-full overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.45)]" style={{ aspectRatio: "4/5" }}>
               <Image
-                src="/old-site/images/home/DSC00751.png"
+                src={homeHero}
                 alt="Fachada de El Tepeyac"
                 fill
                 sizes="640px"

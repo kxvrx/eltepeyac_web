@@ -27,6 +27,9 @@ const mono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://eltepeyactaqueria.com";
+const ogImage = "https://res.cloudinary.com/kxvrx-cloudinary/image/upload/f_auto,q_auto,w_1200/home_DSC00751.png";
+
 export const metadata: Metadata = {
   title: {
     default: "El Tepeyac Taqueria | East Harlem, NY",
@@ -34,12 +37,21 @@ export const metadata: Metadata = {
   },
   description:
     "Cocina mexicana auténtica y tradicional en East Harlem. Favoritos frescos hechos con cariño — guacamole famoso, tacos, burritos y más.",
-  metadataBase: new URL("https://eltepeyac.example"),
+  metadataBase: new URL(siteUrl),
   openGraph: {
     title: "El Tepeyac Taqueria",
     description:
       "Cocina mexicana auténtica y tradicional en East Harlem. Ordena en línea y visítanos en Lexington Ave.",
     type: "website",
+    url: siteUrl,
+    siteName: "El Tepeyac Taqueria",
+    images: [{ url: ogImage, width: 1200, alt: "El Tepeyac Taqueria — East Harlem, NY" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "El Tepeyac Taqueria",
+    description: "Cocina mexicana auténtica y tradicional en East Harlem.",
+    images: [ogImage],
   },
 };
 
@@ -60,7 +72,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Restaurant",
               name: "El Tepeyac Taqueria",
-              url: "https://eltepeyac.example",
+              url: siteUrl,
               telephone: "+1-212-814-4882",
               address: {
                 "@type": "PostalAddress",

@@ -1,76 +1,95 @@
-import { Container } from "@/components/ui/Container";
 import Image from "next/image";
 import Link from "next/link";
+import { Container } from "@/components/ui/Container";
+import { fetchAlbumPhotosWithMeta } from "@/lib/cloudinary-server";
 import { galleryAlbums } from "@/lib/gallery";
+import { SubAlbumClient } from "../ui/SubAlbumClient";
 
 export const metadata = {
-  title: "Altar Día de Muertos",
-  description: "Una historia de temporada: flores, velas y memoria.",
+  title: "Altar Día de Muertos — El Tepeyac",
+  description: "Una historia de temporada contada con color, flores y memoria.",
 };
 
-const album = galleryAlbums.find((a) => a.slug === "altar")!;
-const photos = album.photos;
+export default async function AltarDiaDeMuertosPage() {
+  const album  = galleryAlbums.find((a) => a.slug === "altar")!;
+  const photos = await fetchAlbumPhotosWithMeta(album.prefix);
 
-export default function AltarDiaDeMuertosPage() {
   return (
-    <div>
-      <section className="py-14 sm:py-18">
+    <div className="bg-[#fafaf8]">
+      {/* ── Header ─────────────────────────────────────────────────────── */}
+      <section className="pt-24 pb-12 sm:pt-32 sm:pb-16">
         <Container>
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
             <div className="max-w-2xl">
-              <div className="text-[11px] font-mono tracking-[0.28em] text-charcoal/55">
-                HISTORIA DE TEMPORADA
+              <div className="font-mono text-sm tracking-[0.4em] uppercase text-cilantro">
+                {album.eyebrow}
               </div>
-              <h1 className="mt-4 text-5xl leading-[0.92] sm:text-6xl">
-                Altar Día de Muertos
+              <h1 className="mt-4 text-5xl leading-[0.92] text-charcoal sm:text-6xl lg:text-7xl">
+                {album.title}
               </h1>
-              <p className="mt-6 text-base leading-7 text-charcoal/75">
-                Esta colección está lista para una futura entrega de fotos. Por ahora usa
-                algunas imágenes existentes como ejemplo de composición.
+              <p className="mt-5 max-w-lg text-lg leading-8 text-charcoal">
+                {album.subtitle}
               </p>
             </div>
             <Link
               href="/gallery"
-              className="w-fit rounded-md border border-border bg-paper px-5 py-3 text-sm font-semibold text-charcoal hover:bg-black/[0.02]"
+              className="w-fit border-b border-charcoal/40 pb-0.5 text-base font-semibold text-charcoal/70 transition-colors hover:border-charcoal hover:text-charcoal"
             >
-              Volver a galería
+              ← Galería principal
             </Link>
           </div>
         </Container>
       </section>
 
-      <section className="pb-16 sm:pb-20">
-        <Container>
-          <div className="paper grain rounded-2xl p-7 sm:p-9">
-            <div className="flex items-end justify-between gap-6">
-              <div>
-                <div className="text-[11px] font-mono tracking-[0.28em] text-charcoal/55">
-                  GRID
-                </div>
-                <h2 className="mt-3 text-3xl leading-[1.02] sm:text-4xl">
-                  Layout centrado en la imagen
-                </h2>
-              </div>
-              <div className="hidden text-sm text-charcoal/70 sm:block">Agrega 12–30 fotos después.</div>
+      {/* ── Fotos ──────────────────────────────────────────────────────── */}
+      {photos.length === 0 ? (
+        <section className="pb-20">
+          <Container>
+            <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-charcoal/12 py-28 text-center">
+              <p className="font-mono text-sm tracking-widest text-charcoal/35 uppercase">
+                Álbum vacío
+              </p>
+              <p className="font-mono text-xs text-charcoal/25">
+                Sube imágenes con el prefijo{" "}
+                <code className="rounded bg-charcoal/5 px-1.5 py-0.5">altar_</code>{" "}
+                en Cloudinary
+              </p>
             </div>
-            <div className="mt-7 ornament" />
-            <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {photos.map((photo, idx) => (
-                <div
-                  key={`${photo.src}-${idx}`}
-                  className={`relative overflow-hidden rounded-xl border border-border bg-paper shadow-[0_18px_55px_rgba(0,0,0,0.06)] ${
-                    idx % 3 === 1 ? "aspect-[3/4]" : idx % 3 === 2 ? "aspect-[4/5]" : "aspect-[4/3]"
-                  }`}
-                >
-                  <Image src={photo.src} alt="Seasonal story placeholder" fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-black/10 via-transparent to-black/0" />
-                </div>
-              ))}
-            </div>
+          </Container>
+        </section>
+      ) : (
+        <>
+          {/* Hero foto — full width */}
+          <div className="relative w-full" style={{ height: "clamp(380px, 58vw, 740px)" }}>
+            <Image
+              src={photos[0].src}
+              alt={album.title}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
           </div>
-        </Container>
-      </section>
+
+          {/* Masonry + Lightbox + Nav entre álbumes */}
+          <div className="pt-0.5">
+            <SubAlbumClient
+              photos={photos}
+              albums={galleryAlbums}
+              currentSlug={album.slug}
+            />
+          </div>
+        </>
+      )}
+
+      {/* Si vacío: mostrar nav entre álbumes igualmente */}
+      {photos.length === 0 && (
+        <SubAlbumClient
+          photos={[]}
+          albums={galleryAlbums}
+          currentSlug={album.slug}
+        />
+      )}
     </div>
   );
 }
-

@@ -1,4 +1,20 @@
 // ── Estructura centralizada de galerías ────────────────────────────────────────
+//
+// Las fotos ya NO están hardcodeadas aquí.
+// Cada álbum tiene un `prefix` que matchea el nombre de las imágenes en Cloudinary.
+//
+// Convención de nombres en Cloudinary:
+//   altar_01-portada.jpg   → álbum "altar",  foto #1
+//   altar_02-flores.jpg    → álbum "altar",  foto #2
+//   catering_01-bandejas.jpg → álbum "catering", foto #1
+//
+// Para agregar fotos: súbelas a Cloudinary con el prefijo correcto. Listo.
+
+import {
+  homeAbril,
+  galleryAltarCover,
+  galleryCateringCover,
+} from "@/lib/images";
 
 export type GalleryPhoto = {
   src: string;
@@ -8,65 +24,45 @@ export type GalleryPhoto = {
 
 export type Album = {
   slug: string;
+  prefix: string;   // prefijo en Cloudinary → "altar_", "catering_"
   eyebrow: string;
   title: string;
   subtitle: string;
   href: string;
-  cover: string;
-  photos: GalleryPhoto[];
+  cover: string;   // imagen estática de portada (desde images.ts)
 };
 
+// ── Álbumes registrados ────────────────────────────────────────────────────────
+// Para crear un álbum nuevo:
+//   1. Agrégalo aquí con su prefix y cover
+//   2. Sube las fotos a Cloudinary con ese prefix
+//   3. Listo — aparece automáticamente en la galería
 export const galleryAlbums: Album[] = [
   {
     slug: "lugar",
+    prefix: "home_",
     eyebrow: "Galería principal",
     title: "El Lugar",
     subtitle: "El restaurante, el equipo y los momentos del día a día en East Harlem.",
     href: "#fotos",
-    cover: "/old-site/images/home/abril-4.jpg",
-    photos: [
-      { src: "/old-site/images/home/abril-4.jpg",                       col: "col-span-8", aspect: "aspect-[16/9]" },
-      { src: "/old-site/images/contact/tepeyac-mayo-4.jpg",             col: "col-span-4", aspect: "aspect-[3/4]"  },
-      { src: "/old-site/images/contact/tepeyac-mayo-1.jpg",             col: "col-span-4", aspect: "aspect-[4/3]"  },
-      { src: "/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png",   col: "col-span-4", aspect: "aspect-[4/3]"  },
-      { src: "/old-site/images/home/DSC00751.png",                      col: "col-span-4", aspect: "aspect-[4/3]"  },
-      { src: "/old-site/images/contact/tepeyac-mayo-3.jpg",             col: "col-span-6", aspect: "aspect-[16/9]" },
-      { src: "/old-site/images/home/DSC00014.jpg",                      col: "col-span-6", aspect: "aspect-[16/9]" },
-    ],
+    cover: homeAbril,
   },
   {
     slug: "altar",
+    prefix: "altar_",
     eyebrow: "Historia de temporada",
     title: "Altar Día de Muertos",
     subtitle: "Una historia de temporada contada con color, flores y memoria.",
     href: "/gallery/altar-dia-de-muertos",
-    cover: "/old-site/images/contact/tepeyac-mayo-4.jpg",
-    photos: [
-      { src: "/old-site/images/contact/tepeyac-mayo-4.jpg" },
-      { src: "/old-site/images/home/abril-4.jpg" },
-      { src: "/old-site/images/contact/tepeyac-mayo-1.jpg" },
-      { src: "/old-site/images/home/DSC00014.jpg" },
-      { src: "/old-site/images/contact/tepeyac-mayo-3.jpg" },
-      { src: "/old-site/images/home/DSC00751.png" },
-    ],
+    cover: galleryAltarCover,
   },
   {
     slug: "catering",
+    prefix: "catering_",
     eyebrow: "Eventos y catering",
     title: "Galería de Catering",
     subtitle: "Montajes, bandejas y platos para grupos de 10 a 500 personas.",
     href: "/gallery/catering-gallery",
-    cover: "/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png",
-    photos: [
-      { src: "/old-site/images/home/abril-4.jpg" },
-      { src: "/old-site/images/contact/tepeyac-mayo-1.jpg" },
-      { src: "/old-site/images/home/DSC00014.jpg" },
-      { src: "/old-site/images/contact/tepeyac-mayo-4.jpg" },
-      { src: "/old-site/images/home/DSC00068-v2-Enhanced-NR-min.png" },
-      { src: "/old-site/images/contact/tepeyac-mayo-3.jpg" },
-      { src: "/old-site/images/home/DSC00751.png" },
-      { src: "/old-site/images/home/abril-4.jpg" },
-      { src: "/old-site/images/contact/tepeyac-mayo-1.jpg" },
-    ],
+    cover: galleryCateringCover,
   },
-] as const;
+];
