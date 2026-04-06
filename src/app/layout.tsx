@@ -64,6 +64,11 @@ export default function RootLayout({
     <html lang="es" className="scroll-smooth">
       <body className={`${heading.variable} ${body.variable} ${mono.variable} antialiased`}>
         <Script
+          src="https://analytics.kxvrx.com/script.js"
+          data-website-id="4f305815-ef40-4dd1-9ea2-eb4cec6c8de7"
+          strategy="afterInteractive"
+        />
+        <Script
           id="restaurant-jsonld"
           type="application/ld+json"
           strategy="afterInteractive"

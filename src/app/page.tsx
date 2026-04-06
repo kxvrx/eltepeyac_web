@@ -57,7 +57,7 @@ export default function Home() {
                     Ordenar en línea
                   </a>
                   <Link
-                    href="/gallery"
+                    href="/menu"
                     className="inline-flex items-center bg-cilantro px-8 py-4 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
                   >
                     Nuestro menú
