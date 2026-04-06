@@ -52,6 +52,8 @@ export function SiteHeader() {
       href={restaurant.orderUrl}
       target="_blank"
       rel="noopener noreferrer"
+      data-umami-event="order-click"
+      data-umami-event-location="header"
       className="group relative inline-flex items-center overflow-hidden bg-white px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.1em] text-cilantro transition-all duration-300 hover:bg-maiz hover:text-charcoal hover:shadow-[0_4px_20px_rgba(0,0,0,0.22)] active:scale-[0.98]"
     >
       {/* Barrido en hover */}
@@ -240,6 +242,8 @@ export function SiteHeader() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setOpen(false)}
+                    data-umami-event="order-click"
+                    data-umami-event-location="mobile-menu"
                     className="flex w-full items-center justify-center rounded-xl bg-salsa px-5 py-3.5 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
                   >
                     Ordenar en línea

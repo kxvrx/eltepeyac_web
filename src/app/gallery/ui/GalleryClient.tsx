@@ -58,6 +58,7 @@ function AlbumCard({
         fill
         priority={priority}
         sizes={featured ? "62vw" : "38vw"}
+        unoptimized
         className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10 transition-all duration-500 group-hover:from-black/90" />

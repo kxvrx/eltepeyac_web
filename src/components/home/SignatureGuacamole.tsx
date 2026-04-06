@@ -39,7 +39,12 @@ export function SignatureGuacamole() {
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <ExternalButtonLink href={restaurant.orderUrl} tone="salsa">
+            <ExternalButtonLink
+              href={restaurant.orderUrl}
+              tone="salsa"
+              data-umami-event="order-click"
+              data-umami-event-location="signature-guacamole"
+            >
               Order Now
             </ExternalButtonLink>
             <span className="text-xs text-muted">

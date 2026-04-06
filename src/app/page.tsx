@@ -52,6 +52,8 @@ export default function Home() {
                     href={restaurant.orderUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-umami-event="order-click"
+                    data-umami-event-location="hero"
                     className="inline-flex items-center bg-salsa px-8 py-4 text-sm font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
                   >
                     Ordenar en línea
@@ -133,15 +135,23 @@ export default function Home() {
               <p className="mt-7 max-w-md text-xl leading-7 text-charcoal/65">
                 Recetas insignia de la casa, no te puedes perder estas especialidades tradicionales desde México.
               </p>
-              <div className="mt-10 flex flex-wrap justify-center">
+              <div className="mt-10 flex flex-wrap gap-4">
                 <a
                   href={restaurant.orderUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-umami-event="order-click"
+                  data-umami-event-location="brand-story"
                   className="inline-flex items-center bg-salsa px-7 py-4 text-md font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
                 >
-                  Ver menú completo
+                  Ordenar en línea
                 </a>
+                <Link
+                  href="/menu"
+                  className="inline-flex items-center bg-cilantro px-7 py-4 text-md font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
+                >
+                  Ver menú completo
+                </Link>
               </div>
             </div>
 
@@ -207,6 +217,8 @@ export default function Home() {
                   href={restaurant.orderUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-umami-event="order-click"
+                  data-umami-event-location="guacamole-section"
                   className="inline-flex items-center bg-cilantro px-7 py-4 text-md font-semibold uppercase tracking-wider text-bone transition hover:brightness-95"
                 >
                   Ordenar guacamole

@@ -69,6 +69,8 @@ export function MenuClient({ menuImage }: { menuImage: StaticImageData }) {
             href={restaurant.orderUrl}
             target="_blank"
             rel="noopener noreferrer"
+            data-umami-event="order-click"
+            data-umami-event-location="menu-page"
             className="group relative inline-flex items-center overflow-hidden bg-salsa px-10 py-4 text-base font-semibold uppercase tracking-[0.1em] text-white transition-all duration-300 hover:shadow-[0_4px_20px_rgba(215,58,47,0.3)] active:scale-[0.98] rounded-md mt-4"
           >
             {/* Barrido en hover */}

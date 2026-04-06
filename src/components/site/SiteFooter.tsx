@@ -12,10 +12,10 @@ export function SiteFooter() {
             Taqueria · Tradicional · NYC
           </div>
         </div>
-        <div className="mt-10 grid gap-14 md:grid-cols-12">
+        <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:mt-10 md:grid-cols-12 md:gap-14">
           {/* Brand */}
-          <div className="md:col-span-5 flex flex-col items-center justify-center">
-            <div className="mt-5 relative h-20 w-64 sm:h-24 sm:w-80">
+          <div className="col-span-2 md:col-span-5 flex flex-col items-center justify-center text-center">
+            <div className="mt-2 relative h-16 w-52 sm:mt-5 sm:h-24 sm:w-80">
               <Image
                 src="https://res.cloudinary.com/kxvrx-cloudinary/image/upload/f_auto,q_auto/logo_blanco.png"
                 alt="Taqueria El Tepeyac"
@@ -24,13 +24,13 @@ export function SiteFooter() {
                 className="object-contain object-center"
               />
             </div>
-            <p className="mt-5 max-w-sm text-lg leading-7 text-bone/60">
+            <p className="mt-4 max-w-sm text-sm md:text-lg leading-6 md:leading-7 text-bone/60">
               La comida sabe mejor cuando se comparte.
             </p>
 
-            <div className="mt-2 h-px bg-gradient-to-r from-transparent via-bone/20 to-transparent" />
+            <div className="mt-4 h-px bg-gradient-to-r from-transparent via-bone/20 to-transparent w-full max-w-[200px]" />
 
-            <div className="mt-2 flex flex-wrap gap-6 text-lg text-bone/70">
+            <div className="mt-4 flex flex-wrap justify-center gap-4 md:gap-6 text-sm md:text-lg text-bone/70">
               <a
                 className="underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
                 href={`tel:${restaurant.phoneE164}`}
@@ -42,6 +42,8 @@ export function SiteFooter() {
                 href={restaurant.orderUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-umami-event="order-click"
+                data-umami-event-location="footer"
               >
                 Ordenar en línea
               </a>
@@ -49,17 +51,17 @@ export function SiteFooter() {
           </div>
 
           {/* Horario + Ubicación */}
-          <div className="md:col-span-3">
-            <div className="text-[19px] font-mono tracking-[0.34em] uppercase text-bone/45">
+          <div className="col-span-1 md:col-span-3 flex flex-col break-words">
+            <div className="text-[13px] md:text-[19px] font-mono tracking-[0.2em] md:tracking-[0.34em] uppercase text-bone/45">
               Horario
             </div>
-            <div className="mt-4 text-lg leading-7 text-bone/70">{restaurant.hours}</div>
+            <div className="mt-2 md:mt-4 text-sm md:text-lg leading-relaxed md:leading-7 text-bone/70">{restaurant.hours}</div>
 
-            <div className="mt-10 text-[19px] font-mono tracking-[0.34em] uppercase text-bone/45">
+            <div className="mt-6 md:mt-10 text-[13px] md:text-[19px] font-mono tracking-[0.2em] md:tracking-[0.34em] uppercase text-bone/45">
               Ubicación
             </div>
             <a
-              className="mt-4 inline-block text-lg leading-7 text-bone/70 underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
+              className="mt-2 md:mt-4 inline-block text-sm md:text-lg leading-relaxed md:leading-7 text-bone/70 underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                 restaurant.mapQuery
               )}`}
@@ -72,17 +74,23 @@ export function SiteFooter() {
             </a>
           </div>
 
-          {/* Páginas + nota */}
-          <div className="md:col-span-4">
-            <div className="text-[19px] font-mono tracking-[0.34em] uppercase text-bone/45">
+          {/* Páginas */}
+          <div className="col-span-1 md:col-span-4 flex flex-col break-words">
+            <div className="text-[13px] md:text-[19px] font-mono tracking-[0.2em] md:tracking-[0.34em] uppercase text-bone/45">
               Páginas
             </div>
-            <div className="mt-4 grid gap-3 text-lg">
+            <div className="mt-2 md:mt-4 grid gap-2 md:gap-3 text-sm md:text-lg">
               <Link
                 className="w-fit text-bone/70 underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
                 href="/"
               >
                 Inicio
+              </Link>
+              <Link
+                className="w-fit text-bone/70 underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
+                href="/menu"
+              >
+                Menú
               </Link>
               <Link
                 className="w-fit text-bone/70 underline underline-offset-4 decoration-bone/20 hover:decoration-bone/55 transition"
@@ -97,15 +105,16 @@ export function SiteFooter() {
                 Contacto
               </Link>
             </div>
+          </div>
 
-            <div className="mt-12 border-l border-bone/15 pl-6">
-              <div className="text-[19px] font-mono tracking-[0.28em] uppercase text-bone/45">
-                Catering
-              </div>
-              <p className="mt-3 text-lg leading-6 text-bone/55">
-                Para pedidos grandes y eventos, usa la página de contacto o llámanos.
-              </p>
+          {/* Catering */}
+          <div className="col-span-2 md:col-span-12 mt-4 md:mt-6 border-t border-bone/15 pt-8 md:pt-10 flex flex-col items-center text-center">
+            <div className="text-[13px] md:text-[19px] font-mono tracking-[0.15em] md:tracking-[0.28em] uppercase text-bone/45">
+              Catering
             </div>
+            <p className="mt-2 md:mt-3 text-xs md:text-lg leading-snug md:leading-6 text-bone/55 max-w-md">
+              Para pedidos y eventos, contáctanos.
+            </p>
           </div>
         </div>
 
