@@ -93,7 +93,7 @@ function ProximasBanner({ events, year }: { events: CalendarEvent[]; year: numbe
               >
                 <span className="text-2xl">{event.emoji}</span>
                 <div>
-                  <p className="font-heading text-[15px] font-semibold leading-tight text-[var(--charcoal)]">
+                  <p className="text-sm font-semibold leading-tight text-[var(--charcoal)]">
                     {event.nameES}
                   </p>
                   <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--charcoal)]/40">
@@ -195,7 +195,7 @@ function MonthColumn({
       {/* Watermark */}
       <span
         aria-hidden
-        className="pointer-events-none absolute right-1 top-0 select-none font-heading text-[72px] font-light leading-none text-[var(--charcoal)]/[0.04]"
+        className="pointer-events-none absolute right-1 top-0 select-none text-[72px] font-light leading-none text-[var(--charcoal)]/[0.04]"
       >
         {monthNum}
       </span>
@@ -296,7 +296,7 @@ export default function CalendarioClient({ upcoming, year }: Props) {
           <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.32em] text-white/50">
             Reservaciones · Catering · Eventos
           </p>
-          <h2 className="mb-6 font-heading text-3xl font-light text-white sm:text-4xl">
+          <h2 className="mb-6 text-3xl font-light text-white sm:text-4xl">
             ¿Celebras algo especial?
           </h2>
           <p className="mb-8 text-white/70">

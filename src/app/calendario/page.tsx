@@ -21,7 +21,7 @@ export default function CalendarioPage() {
           <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.38em] text-[var(--bone)]/45">
             Calendario · El Tepeyac · {year}
           </p>
-          <h1 className="mb-5 max-w-2xl font-heading text-4xl font-light leading-[1.05] text-[var(--bone)] sm:text-5xl lg:text-6xl">
+          <h1 className="mb-5 max-w-2xl text-4xl font-light leading-[1.05] text-[var(--bone)] sm:text-5xl lg:text-6xl">
             Celebramos todo el año
           </h1>
           <p className="max-w-xl text-base leading-7 text-[var(--bone)]/60 sm:text-lg">
