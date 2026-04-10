@@ -73,13 +73,13 @@ function FilterLegend({
 }
 
 // ---------------------------------------------------------------------------
-// Upcoming Events Strip — Reduced size
+// Upcoming Events Strip
 // ---------------------------------------------------------------------------
 function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number }) {
   if (events.length === 0) return null;
 
   return (
-    <section className="bg-white py-10 sm:py-14 border-b-4 border-[var(--cilantro)]">
+    <section className="bg-white py-10 sm:py-14 border-b border-black/10">
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <p className="mb-6 sm:mb-8 text-lg sm:text-2xl font-light text-[var(--charcoal)]">
           🎉 Próximas celebraciones
@@ -91,26 +91,16 @@ function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number
             if (!date) return null;
 
             return (
-              <div
-                key={event.id}
-                className="group relative h-full cursor-pointer"
-              >
-                <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${
-                  event.category === "mexico" ? "from-[var(--cilantro)]/15 to-[var(--cilantro)]/5" :
-                  event.category === "usa" ? "from-[var(--oaxaca)]/15 to-[var(--oaxaca)]/5" :
-                  event.category === "both" ? "from-[var(--maiz)]/15 to-[var(--maiz)]/5" :
-                  "from-[var(--salsa)]/15 to-[var(--salsa)]/5"
-                } border-2 ${meta.borderClass} transition-all duration-300 group-hover:shadow-lg group-hover:scale-102`} />
-
-                <div className="relative p-4 sm:p-5 h-full flex flex-col">
-                  <p className="text-4xl sm:text-5xl mb-2 leading-none">{event.emoji}</p>
-                  <p className={`text-base sm:text-lg font-bold mb-2 ${meta.textClass}`}>
+              <div key={event.id} className="group cursor-pointer">
+                <div className={`relative h-full p-5 sm:p-6 rounded-xl border-2 ${meta.borderClass} bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1`}>
+                  <p className="text-5xl mb-3">{event.emoji}</p>
+                  <p className={`text-sm sm:text-base font-bold mb-2 ${meta.textClass}`}>
                     {formatDateShort(date)}
                   </p>
                   <h3 className="text-base sm:text-lg font-semibold text-[var(--charcoal)] mb-2">
                     {event.nameES}
                   </h3>
-                  <p className="text-xs sm:text-sm text-[var(--charcoal)]/70 leading-relaxed flex-grow">
+                  <p className="text-xs sm:text-sm text-[var(--charcoal)]/65 leading-relaxed">
                     {event.descriptionES}
                   </p>
                 </div>
@@ -124,7 +114,7 @@ function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number
 }
 
 // ---------------------------------------------------------------------------
-// Event Card — Reduced size
+// NEW: Event Card Design — Super Clean & Minimal
 // ---------------------------------------------------------------------------
 function EventCard({ event, year, visible }: { event: CalendarEvent; year: number; visible: boolean }) {
   const meta = CATEGORY_META[event.category];
@@ -133,59 +123,36 @@ function EventCard({ event, year, visible }: { event: CalendarEvent; year: numbe
 
   if (!visible) return null;
 
-  if (isBanner) {
-    return (
-      <div className="relative group mb-2 last:mb-0">
-        <div className={`flex items-center gap-3 w-full rounded-lg border-l-8 ${meta.borderClass} bg-gradient-to-r from-white/80 to-[var(--bone)]/40 p-3 sm:p-4 transition-all duration-200 hover:shadow-md hover:scale-101`}>
-          <span className="text-3xl sm:text-4xl shrink-0">{event.emoji}</span>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm sm:text-base font-bold text-[var(--charcoal)]">{event.nameES}</p>
-            <p className={`text-xs mt-1 ${meta.textClass} font-bold uppercase tracking-wider`}>
-              ⏰ TODO EL MES
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative group mb-3 last:mb-0">
-      {/* Timeline dot */}
-      <div className="hidden sm:block absolute -left-7 top-4 w-3 h-3 rounded-full border-2 border-[var(--bone)] bg-white shadow-md group-hover:bg-[var(--charcoal)] transition-colors" />
-      <div className={`hidden sm:block absolute -left-4 top-8 w-0.5 h-12 bg-black/10`} />
+    <div className={`group cursor-default transition-all duration-300 ${visible ? "opacity-100" : "opacity-20 pointer-events-none"}`}>
+      <div className={`flex items-start gap-4 px-4 sm:px-5 py-4 sm:py-5 rounded-lg hover:bg-[var(--bone)]/30 transition-colors duration-200 border-l-4 ${meta.borderClass}`}>
+        {/* Emoji + Date Column */}
+        <div className="flex flex-col items-center gap-2 shrink-0">
+          <span className={`text-3xl sm:text-4xl`}>{event.emoji}</span>
+          {!isBanner && date && (
+            <span className={`text-xs sm:text-sm font-black ${meta.textClass} text-center leading-tight`}>
+              {formatDateShort(date)}
+            </span>
+          )}
+          {isBanner && (
+            <span className={`text-xs ${meta.textClass} font-bold uppercase tracking-wider`}>
+              TODO MES
+            </span>
+          )}
+        </div>
 
-      {/* Card */}
-      <div className={`rounded-xl border-l-8 ${meta.borderClass} overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-102`}>
-        <div className={`h-1.5 w-full ${meta.bgClass}`} />
-
-        <div className={`bg-gradient-to-br ${
-          event.category === "mexico" ? "from-white via-[var(--cilantro)]/[0.02] to-[var(--cilantro)]/[0.05]" :
-          event.category === "usa" ? "from-white via-[var(--oaxaca)]/[0.02] to-[var(--oaxaca)]/[0.05]" :
-          event.category === "both" ? "from-white via-[var(--maiz)]/[0.02] to-[var(--maiz)]/[0.05]" :
-          "from-white via-[var(--salsa)]/[0.02] to-[var(--salsa)]/[0.05]"
-        } p-4 sm:p-5`}>
-          {/* Header row */}
-          <div className="flex items-start gap-3 mb-3">
-            <span className="text-4xl sm:text-5xl shrink-0 leading-none">{event.emoji}</span>
-            {date && (
-              <div className={`${meta.bgClass} rounded-lg px-3 sm:px-4 py-2 sm:py-3 text-white flex-1 sm:flex-none`}>
-                <p className="text-xs sm:text-sm font-mono font-black leading-tight">
-                  {formatDateShort(date)}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Event info */}
-          <h4 className="text-xl sm:text-2xl font-semibold text-[var(--charcoal)] mb-1 leading-tight">
+        {/* Content Column */}
+        <div className="flex-1 min-w-0 pt-0.5">
+          <h4 className="text-base sm:text-lg font-semibold text-[var(--charcoal)] leading-snug mb-1">
             {event.nameES}
           </h4>
-          <p className="text-xs text-[var(--charcoal)]/60 italic mb-2">
-            {event.nameEN}
-          </p>
-          <p className="text-xs sm:text-sm text-[var(--charcoal)]/75 leading-relaxed">
-            {event.restaurantNote ? event.restaurantNote : event.descriptionES}
+          {!isBanner && event.nameEN && (
+            <p className="text-xs text-[var(--charcoal)]/50 italic mb-2">
+              {event.nameEN}
+            </p>
+          )}
+          <p className="text-xs sm:text-sm text-[var(--charcoal)]/70 leading-relaxed">
+            {event.restaurantNote || event.descriptionES}
           </p>
         </div>
       </div>
@@ -194,7 +161,7 @@ function EventCard({ event, year, visible }: { event: CalendarEvent; year: numbe
 }
 
 // ---------------------------------------------------------------------------
-// Month Section — Reduced size
+// Month Section
 // ---------------------------------------------------------------------------
 function MonthSection({
   monthIndex,
@@ -212,39 +179,34 @@ function MonthSection({
   );
 
   return (
-    <div className="mb-8 sm:mb-0">
+    <div className="group">
       {/* Month header */}
-      <div className={`sticky sm:static top-[140px] z-20 sm:z-0 rounded-lg sm:rounded-xl border-b-4 p-4 sm:p-6 mb-4 sm:mb-0 transition-all duration-300 ${
+      <div className={`sticky sm:static top-[140px] z-20 sm:z-0 px-5 sm:px-6 py-4 sm:py-5 rounded-lg sm:rounded-xl border-b-4 transition-all duration-300 mb-3 sm:mb-4 ${
         isCurrentMonth
-          ? "border-[var(--cilantro)] bg-gradient-to-r from-[var(--cilantro)]/20 via-white to-[var(--bone)]/20"
-          : "border-black/10 bg-white shadow-sm"
+          ? "border-[var(--cilantro)] bg-gradient-to-r from-[var(--cilantro)]/10 to-transparent"
+          : "border-black/8 bg-white/50"
       }`}>
-        <div className="flex items-baseline gap-2">
-          <h3 className={`text-2xl sm:text-3xl font-light ${isCurrentMonth ? "text-[var(--cilantro)]" : "text-[var(--charcoal)]"}`}>
-            {MONTHS_ES[monthIndex - 1]}
-          </h3>
-          {isCurrentMonth && <span className="text-xl">✨</span>}
-        </div>
+        <h3 className={`text-2xl sm:text-2xl font-light ${isCurrentMonth ? "text-[var(--cilantro)]" : "text-[var(--charcoal)]"}`}>
+          {MONTHS_ES[monthIndex - 1]}
+        </h3>
       </div>
 
-      {/* Events */}
-      <div className="sm:space-y-2 relative">
+      {/* Events list */}
+      <div className="space-y-0 border-l-4 border-black/5 rounded-lg overflow-hidden">
         {events.length === 0 ? (
-          <div className="text-center py-8 sm:py-6 text-[var(--charcoal)]/40 italic">
-            <p className="text-sm">—</p>
+          <div className="text-center py-6 sm:py-5 text-[var(--charcoal)]/30 text-sm italic">
+            —
           </div>
         ) : (
-          <>
-            <div className="hidden sm:block absolute -left-7 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--charcoal)]/20 to-[var(--charcoal)]/0" />
-            {events.map((event) => (
+          events.map((event, idx) => (
+            <div key={event.id} className={idx !== events.length - 1 ? "border-b border-black/5" : ""}>
               <EventCard
-                key={event.id}
                 event={event}
                 year={year}
                 visible={true}
               />
-            ))}
-          </>
+            </div>
+          ))
         )}
       </div>
     </div>
@@ -269,10 +231,10 @@ export default function CalendarioClient({ upcoming, year }: Props) {
       {/* Filter Legend */}
       <FilterLegend active={activeFilter} onChange={setActiveFilter} />
 
-      {/* Calendar Section */}
-      <section className="relative bg-gradient-to-b from-white via-[var(--bone)]/20 to-[var(--bone)]/50 py-10 sm:py-20">
+      {/* Calendar Grid */}
+      <section className="bg-gradient-to-b from-white via-[var(--bone)]/15 to-[var(--bone)]/30 py-10 sm:py-16">
         <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-          <div className="space-y-8 sm:space-y-0 sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:gap-8">
+          <div className="grid gap-6 sm:gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {months.map((m) => (
               <MonthSection
                 key={m}
@@ -293,7 +255,7 @@ export default function CalendarioClient({ upcoming, year }: Props) {
 
         <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
           <p className="text-xs sm:text-sm font-light uppercase tracking-[0.2em] text-white/75 mb-3">
-            🎊 Haz que tu evento sea especial
+            🎊 Celebraciones Especiales
           </p>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-5 sm:mb-6 leading-tight">
             ¿Celebras algo importante?
