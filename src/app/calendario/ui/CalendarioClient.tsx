@@ -66,51 +66,56 @@ function FilterTabs({
 }
 
 // ---------------------------------------------------------------------------
-// Upcoming Events Strip
+// Upcoming Events Strip — HERO style
 // ---------------------------------------------------------------------------
 function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number }) {
   if (events.length === 0) return null;
 
   return (
-    <section className="bg-white py-16 sm:py-20">
+    <section className="bg-white py-14 sm:py-20 border-b-4 border-[var(--cilantro)]">
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <p className="mb-8 text-lg font-light text-[var(--charcoal)]/60 sm:text-xl">
-          Próximas celebraciones
+        <p className="mb-10 text-2xl sm:text-3xl font-light text-[var(--charcoal)]">
+          🎉 Próximas celebraciones
         </p>
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {events.slice(0, 6).map((event) => {
             const meta = CATEGORY_META[event.category];
             const date = resolveDate(event, year) ?? resolveDate(event, year + 1);
             if (!date) return null;
 
-            // Map category to color values for more vibrant styling
-            const colorMap: Record<EventCategory, { bg: string; border: string; accent: string }> = {
-              mexico: { bg: "from-[var(--cilantro)]/10", border: "border-[var(--cilantro)]", accent: "bg-[var(--cilantro)]" },
-              usa: { bg: "from-[var(--oaxaca)]/10", border: "border-[var(--oaxaca)]", accent: "bg-[var(--oaxaca)]" },
-              both: { bg: "from-[var(--maiz)]/10", border: "border-[var(--maiz)]", accent: "bg-[var(--maiz)]" },
-              food: { bg: "from-[var(--salsa)]/10", border: "border-[var(--salsa)]", accent: "bg-[var(--salsa)]" },
-            };
-
-            const colors = colorMap[event.category];
-
             return (
               <div
                 key={event.id}
-                className={`group rounded-xl border-t-4 ${colors.border} bg-gradient-to-br ${colors.bg} to-white/50 p-6 transition-all duration-300 hover:shadow-xl hover:scale-105 overflow-hidden`}
+                className="group relative h-full cursor-pointer"
               >
-                {/* Decorative top bar */}
-                <div className={`absolute top-0 left-0 right-0 h-1 ${colors.accent}`} />
+                {/* Card background with dynamic color */}
+                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${
+                  event.category === "mexico" ? "from-[var(--cilantro)]/15 to-[var(--cilantro)]/5" :
+                  event.category === "usa" ? "from-[var(--oaxaca)]/15 to-[var(--oaxaca)]/5" :
+                  event.category === "both" ? "from-[var(--maiz)]/15 to-[var(--maiz)]/5" :
+                  "from-[var(--salsa)]/15 to-[var(--salsa)]/5"
+                } border-2 ${meta.borderClass} transition-all duration-300 group-hover:shadow-xl group-hover:scale-105`} />
 
-                <p className="text-5xl mb-4">{event.emoji}</p>
-                <p className={`text-sm font-bold mb-2 ${meta.textClass}`}>
-                  {formatDateShort(date)}
-                </p>
-                <h3 className="text-lg font-semibold text-[var(--charcoal)] mb-3">
-                  {event.nameES}
-                </h3>
-                <p className="text-sm text-[var(--charcoal)]/65 leading-relaxed">
-                  {event.descriptionES}
-                </p>
+                {/* Content */}
+                <div className="relative p-6 sm:p-8 h-full flex flex-col">
+                  {/* Giant emoji */}
+                  <p className="text-7xl sm:text-8xl mb-4 leading-none">{event.emoji}</p>
+
+                  {/* Date badge */}
+                  <p className={`text-xl sm:text-2xl font-black mb-3 ${meta.textClass}`}>
+                    {formatDateShort(date)}
+                  </p>
+
+                  {/* Event name */}
+                  <h3 className="text-xl sm:text-2xl font-semibold text-[var(--charcoal)] mb-3">
+                    {event.nameES}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-sm sm:text-base text-[var(--charcoal)]/70 leading-relaxed flex-grow">
+                    {event.descriptionES}
+                  </p>
+                </div>
               </div>
             );
           })}
@@ -121,99 +126,82 @@ function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number
 }
 
 // ---------------------------------------------------------------------------
-// Event Card — Distinctive & Characterful
+// Event Card — Completely new design (MOBILE FIRST)
 // ---------------------------------------------------------------------------
 function EventCard({ event, year, visible }: { event: CalendarEvent; year: number; visible: boolean }) {
   const meta = CATEGORY_META[event.category];
   const date = resolveDate(event, year);
   const isBanner = event.recurrence.kind === "monthSpan";
 
-  // Map category to vibrant colors and visual style
-  const styleMap: Record<EventCategory, { topBg: string; cardBg: string; textColor: string; accentColor: string; lightBg: string }> = {
-    mexico: {
-      topBg: "bg-[var(--cilantro)]",
-      cardBg: "from-[var(--cilantro)]/8",
-      textColor: "text-[var(--cilantro)]",
-      accentColor: "bg-[var(--cilantro)]/20",
-      lightBg: "bg-[var(--cilantro)]/[0.03]"
-    },
-    usa: {
-      topBg: "bg-[var(--oaxaca)]",
-      cardBg: "from-[var(--oaxaca)]/8",
-      textColor: "text-[var(--oaxaca)]",
-      accentColor: "bg-[var(--oaxaca)]/20",
-      lightBg: "bg-[var(--oaxaca)]/[0.03]"
-    },
-    both: {
-      topBg: "bg-[var(--maiz)]",
-      cardBg: "from-[var(--maiz)]/8",
-      textColor: "text-[var(--maiz)]",
-      accentColor: "bg-[var(--maiz)]/20",
-      lightBg: "bg-[var(--maiz)]/[0.03]"
-    },
-    food: {
-      topBg: "bg-[var(--salsa)]",
-      cardBg: "from-[var(--salsa)]/8",
-      textColor: "text-[var(--salsa)]",
-      accentColor: "bg-[var(--salsa)]/20",
-      lightBg: "bg-[var(--salsa)]/[0.03]"
-    },
-  };
+  if (!visible) return null;
 
-  const style = styleMap[event.category];
+  if (isBanner) {
+    // Month-span banner
+    return (
+      <div className="relative group mb-3 last:mb-0">
+        <div className={`flex items-center gap-4 w-full rounded-xl border-l-8 ${meta.borderClass} bg-gradient-to-r from-white/80 to-[var(--bone)]/40 p-5 sm:p-6 transition-all duration-200 hover:shadow-lg hover:scale-102`}>
+          <span className="text-4xl sm:text-5xl shrink-0">{event.emoji}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-base sm:text-lg font-bold text-[var(--charcoal)]">{event.nameES}</p>
+            <p className={`text-xs sm:text-sm mt-1.5 ${meta.textClass} font-bold uppercase tracking-wider`}>
+              ⏰ TODO EL MES
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div
-      title={event.descriptionES}
-      className={`rounded-xl overflow-hidden transition-all duration-300 transform hover:shadow-lg hover:scale-102 group ${
-        visible ? "opacity-100" : "pointer-events-none opacity-20"
-      }`}
-    >
-      {/* Top accent bar */}
-      <div className={`h-1.5 ${style.topBg} w-full`} />
+    <div className="relative group mb-4 last:mb-0">
+      {/* Timeline dot (visible on sm+) */}
+      <div className="hidden sm:block absolute -left-7 top-6 w-4 h-4 rounded-full border-2 border-[var(--bone)] bg-white shadow-md group-hover:bg-[var(--charcoal)] transition-colors" />
+      <div className={`hidden sm:block absolute -left-4 top-10 w-0.5 h-16 bg-black/10`} />
 
-      <div className={`bg-gradient-to-br ${style.cardBg} to-white p-6`}>
-        {isBanner ? (
-          // Month-span banner layout
-          <div className="flex items-start gap-4">
-            <span className="text-4xl shrink-0">{event.emoji}</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-[var(--charcoal)]">{event.nameES}</p>
-              <p className={`text-xs mt-2 ${style.textColor} font-bold uppercase tracking-wider`}>
-                📅 TODO EL MES
-              </p>
-            </div>
-          </div>
-        ) : (
-          // Regular event card with prominent date
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-3">
-              <span className="text-3xl shrink-0">{event.emoji}</span>
-              <div className={`${style.accentColor} rounded-lg px-3 py-2 text-right`}>
-                {date && (
-                  <p className={`text-sm font-black ${style.textColor} leading-tight`}>
-                    {formatDateShort(date)}
-                  </p>
-                )}
+      {/* Main card */}
+      <div className={`rounded-2xl border-l-8 ${meta.borderClass} overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-102 group/card`}>
+        {/* Top color bar */}
+        <div className={`h-2 w-full ${meta.bgClass}`} />
+
+        {/* Content wrapper with gradient */}
+        <div className={`bg-gradient-to-br ${
+          event.category === "mexico" ? "from-white via-[var(--cilantro)]/[0.02] to-[var(--cilantro)]/[0.05]" :
+          event.category === "usa" ? "from-white via-[var(--oaxaca)]/[0.02] to-[var(--oaxaca)]/[0.05]" :
+          event.category === "both" ? "from-white via-[var(--maiz)]/[0.02] to-[var(--maiz)]/[0.05]" :
+          "from-white via-[var(--salsa)]/[0.02] to-[var(--salsa)]/[0.05]"
+        } p-5 sm:p-7`}>
+          {/* Header row: emoji + date */}
+          <div className="flex items-start gap-4 mb-4">
+            <span className="text-5xl sm:text-6xl shrink-0 leading-none">{event.emoji}</span>
+            {date && (
+              <div className={`${meta.bgClass} rounded-xl px-4 sm:px-5 py-3 sm:py-4 text-white flex-1 sm:flex-none`}>
+                <p className="text-sm sm:text-base font-mono font-black leading-tight">
+                  {formatDateShort(date)}
+                </p>
               </div>
-            </div>
-            <div>
-              <h4 className="text-lg font-bold text-[var(--charcoal)] leading-snug">
-                {event.nameES}
-              </h4>
-              {event.nameEN && (
-                <p className="text-xs text-[var(--charcoal)]/50 mt-1 italic">{event.nameEN}</p>
-              )}
-            </div>
+            )}
           </div>
-        )}
+
+          {/* Event name */}
+          <h4 className="text-2xl sm:text-3xl font-semibold text-[var(--charcoal)] mb-2 leading-tight">
+            {event.nameES}
+          </h4>
+
+          {/* English name + description */}
+          <p className="text-xs sm:text-sm text-[var(--charcoal)]/60 italic mb-3">
+            {event.nameEN}
+          </p>
+          <p className="text-sm sm:text-base text-[var(--charcoal)]/75 leading-relaxed">
+            {event.restaurantNote ? event.restaurantNote : event.descriptionES}
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Month Section — With visual hierarchy
+// Month Section — REDESIGNED for mobile
 // ---------------------------------------------------------------------------
 function MonthSection({
   monthIndex,
@@ -226,43 +214,55 @@ function MonthSection({
   activeFilter: FilterOption;
   isCurrentMonth: boolean;
 }) {
-  const events = getEventsForMonth(monthIndex, year);
+  const events = getEventsForMonth(monthIndex, year).filter(
+    (e) => activeFilter === "all" || activeFilter === e.category
+  );
 
   return (
-    <div
-      className={`rounded-2xl border-t-4 transition-all duration-300 overflow-hidden ${
+    <div className="mb-12 sm:mb-0">
+      {/* Month header — STICKY on mobile */}
+      <div className={`sticky sm:static top-[140px] z-20 sm:z-0 rounded-xl sm:rounded-2xl border-b-4 p-6 sm:p-8 mb-6 sm:mb-0 transition-all duration-300 ${
         isCurrentMonth
-          ? "border-[var(--cilantro)] bg-gradient-to-br from-[var(--cilantro)]/12 via-white to-[var(--bone)]/30 shadow-lg ring-2 ring-[var(--cilantro)]/20"
-          : "border-black/10 bg-white shadow-sm hover:shadow-md"
-      }`}
-    >
-      {/* Month header with background */}
-      <div className={`px-8 py-6 border-b ${isCurrentMonth ? "border-[var(--cilantro)]/20 bg-gradient-to-r from-[var(--cilantro)]/8 to-transparent" : "border-black/5"}`}>
-        <h3 className={`text-2xl font-light ${isCurrentMonth ? "text-[var(--cilantro)]" : "text-[var(--charcoal)]"}`}>
-          {MONTHS_ES[monthIndex - 1]}
-        </h3>
+          ? "border-[var(--cilantro)] bg-gradient-to-r from-[var(--cilantro)]/20 via-white to-[var(--bone)]/20"
+          : "border-black/10 bg-white shadow-sm"
+      }`}>
+        <div className="flex items-baseline gap-3">
+          <h3 className={`text-3xl sm:text-4xl font-light ${isCurrentMonth ? "text-[var(--cilantro)]" : "text-[var(--charcoal)]"}`}>
+            {MONTHS_ES[monthIndex - 1]}
+          </h3>
+          {isCurrentMonth && (
+            <span className="text-2xl">✨</span>
+          )}
+        </div>
         {isCurrentMonth && (
-          <p className="text-xs text-[var(--cilantro)] mt-1 uppercase tracking-wide font-bold">
-            ✨ Mes actual
+          <p className="text-sm text-[var(--cilantro)] mt-2 font-semibold uppercase tracking-wider">
+            Celebraciones este mes
           </p>
         )}
       </div>
 
       {/* Events list */}
-      <div className="p-6 space-y-4">
+      <div className="sm:space-y-3 relative">
         {events.length === 0 ? (
-          <p className="text-sm text-[var(--charcoal)]/30 italic py-8 text-center">
-            Sin celebraciones este mes
-          </p>
+          <div className="text-center py-12 sm:py-8 text-[var(--charcoal)]/40 italic">
+            <p className="text-lg">—</p>
+            <p className="text-sm mt-2">Sin celebraciones</p>
+          </div>
         ) : (
-          events.map((event) => (
-            <EventCard
-              key={event.id}
-              event={event}
-              year={year}
-              visible={activeFilter === "all" || activeFilter === event.category}
-            />
-          ))
+          <>
+            {/* Timeline line for desktop */}
+            <div className="hidden sm:block absolute -left-7 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--charcoal)]/20 to-[var(--charcoal)]/0" />
+
+            {/* Event cards */}
+            {events.map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                year={year}
+                visible={true}
+              />
+            ))}
+          </>
         )}
       </div>
     </div>
@@ -274,17 +274,17 @@ function MonthSection({
 // ---------------------------------------------------------------------------
 function Legend() {
   return (
-    <div className="mx-auto w-full max-w-6xl px-5 sm:px-8 py-10">
-      <p className="text-sm text-[var(--charcoal)]/50 mb-5 font-semibold uppercase tracking-wider">
+    <div className="mx-auto w-full max-w-6xl px-5 sm:px-8 py-8 sm:py-12">
+      <p className="text-sm sm:text-base text-[var(--charcoal)]/50 mb-6 font-semibold uppercase tracking-wider">
         Categorías
       </p>
-      <div className="flex flex-wrap gap-6">
+      <div className="grid grid-cols-2 sm:flex flex-wrap gap-4 sm:gap-8">
         {(Object.keys(CATEGORY_META) as EventCategory[]).map((cat) => {
           const meta = CATEGORY_META[cat];
           return (
             <div key={cat} className="flex items-center gap-3">
-              <div className={`h-4 w-4 rounded-full ${meta.bgClass} ring-2 ring-offset-1 ring-black/10`} />
-              <span className="text-base font-medium text-[var(--charcoal)]">
+              <div className={`h-5 w-5 sm:h-6 sm:w-6 rounded-lg ${meta.bgClass} ring-2 ring-offset-1 ring-black/10`} />
+              <span className="text-sm sm:text-base font-medium text-[var(--charcoal)]">
                 {meta.labelES}
               </span>
             </div>
@@ -316,15 +316,11 @@ export default function CalendarioClient({ upcoming, year }: Props) {
       {/* Legend */}
       <Legend />
 
-      {/* Calendar Grid with vibrant background */}
-      <section className="relative bg-gradient-to-b from-white via-[var(--bone)]/30 to-[var(--bone)]/50 py-20 sm:py-28">
-        {/* Decorative background element */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none" style={{
-          backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(31,78,168,.05) 35px, rgba(31,78,168,.05) 70px)"
-        }} />
-
-        <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-8">
-          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+      {/* Calendar Section */}
+      <section className="relative bg-gradient-to-b from-white via-[var(--bone)]/20 to-[var(--bone)]/50 py-12 sm:py-28">
+        <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+          {/* Mobile: Vertical list, Desktop: 3-column grid */}
+          <div className="space-y-12 sm:space-y-0 sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:gap-10 lg:gap-14">
             {months.map((m) => (
               <MonthSection
                 key={m}
@@ -338,29 +334,29 @@ export default function CalendarioClient({ upcoming, year }: Props) {
         </div>
       </section>
 
-      {/* CTA Section with personality */}
-      <section className="bg-gradient-to-br from-[var(--cilantro)] via-[var(--cilantro)] to-[var(--cilantro)]/90 py-20 sm:py-24 text-white relative overflow-hidden">
-        {/* Decorative corner accent */}
-        <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full" />
-        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/5 rounded-full" />
+      {/* CTA Section */}
+      <section className="bg-gradient-to-br from-[var(--cilantro)] to-[var(--cilantro)]/95 py-16 sm:py-24 text-white relative overflow-hidden">
+        {/* Decorative circles */}
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
+        <div className="absolute -bottom-16 -left-16 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
 
-        <div className="relative mx-auto max-w-2xl px-5 text-center sm:px-8">
-          <p className="text-sm font-light uppercase tracking-[0.2em] text-white/70 mb-4">
-            🎉 Celebraciones Especiales
+        <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
+          <p className="text-sm sm:text-base font-light uppercase tracking-[0.2em] text-white/75 mb-4">
+            🎊 Haz que tu evento sea especial
           </p>
-          <h2 className="text-4xl sm:text-5xl font-light mb-8 leading-tight">
-            ¿Planeas algo para tu grupo?
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-light mb-6 sm:mb-8 leading-tight">
+            ¿Celebras algo importante?
           </h2>
-          <p className="text-lg text-white/85 mb-10 leading-relaxed">
-            Coordenemos una celebración especial en El Tepeyac. Catering, eventos privados,
-            menús personalizados — hacemos que tu fecha sea inolvidable.
+          <p className="text-base sm:text-lg text-white/90 mb-10 sm:mb-12 leading-relaxed max-w-2xl mx-auto">
+            Coordina con nosotros catering, eventos privados, menús especiales para tu grupo.
+            El Tepeyac es el lugar perfecto para tus celebraciones.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 bg-white px-10 py-4 text-base font-bold text-[var(--cilantro)] rounded-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95"
+            className="inline-flex items-center gap-3 bg-white px-8 sm:px-12 py-4 sm:py-5 text-base sm:text-lg font-bold text-[var(--cilantro)] rounded-full transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 active:scale-95"
           >
-            Reservar una celebración
-            <span>→</span>
+            <span>✉️</span>
+            <span>Contacta con nosotros</span>
           </Link>
         </div>
       </section>
