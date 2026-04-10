@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { ParallaxSection } from "@/components/ui/ParallaxSection";
 import { homeInterior } from "@/lib/images";
-import { CALENDAR_EVENTS, getUpcomingEvents } from "@/lib/calendar";
+import { getUpcomingEvents } from "@/lib/calendar";
 import CalendarioClient from "./ui/CalendarioClient";
 
 export const metadata: Metadata = {

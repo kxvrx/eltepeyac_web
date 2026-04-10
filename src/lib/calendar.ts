@@ -116,6 +116,16 @@ export const CALENDAR_EVENTS: CalendarEvent[] = [
     restaurantNote: "Fiesta con platillos poblanos, música y decoración especial.",
   },
   {
+    id: "dia-madres",
+    nameES: "Día de las Madres",
+    nameEN: "Mother's Day",
+    emoji: "🌹",
+    category: "both",
+    recurrence: { kind: "fixed", month: 5, day: 10 },
+    descriptionES: "Fecha para honrar a las madres. Mariachis, mole y festejo familiar.",
+    restaurantNote: "Serenata con mariachi, menú especial y ambiente celebratorio.",
+  },
+  {
     id: "dia-del-padre",
     nameES: "Día del Padre",
     nameEN: "Father's Day",
@@ -166,16 +176,6 @@ export const CALENDAR_EVENTS: CalendarEvent[] = [
     recurrence: { kind: "fixed", month: 2, day: 2 },
     descriptionES: "Tradición de comer tamales. ¡México consume ~40 millones de tamales este día!",
     restaurantNote: "Festival de tamales: variedades tradicionales y regionales.",
-  },
-  {
-    id: "dia-madres-mx",
-    nameES: "Día de las Madres",
-    nameEN: "Mother's Day (MX)",
-    emoji: "🌹",
-    category: "mexico",
-    recurrence: { kind: "fixed", month: 5, day: 10 },
-    descriptionES: "Fecha fija en México para honrar a las madres. Mariachis, mole y festejo familiar.",
-    restaurantNote: "Serenata con mariachi, menú especial y ambiente celebratorio.",
   },
   {
     id: "independencia",
@@ -238,16 +238,6 @@ export const CALENDAR_EVENTS: CalendarEvent[] = [
     recurrence: { kind: "fixed", month: 2, day: 14 },
     descriptionES: "Día del amor y la amistad. Cenas románticas y celebraciones en pareja.",
     restaurantNote: "Menú romántico para parejas, margaritas especiales y ambiente íntimo.",
-  },
-  {
-    id: "dia-madres-us",
-    nameES: "Día de las Madres (EE.UU.)",
-    nameEN: "Mother's Day (US)",
-    emoji: "💐",
-    category: "usa",
-    recurrence: { kind: "nthWeekday", month: 5, nth: 2, weekday: 0 },
-    descriptionES: "Segundo domingo de mayo en EE.UU. — puede coincidir con el Día de las Madres en México (10 mayo).",
-    restaurantNote: "Celebración especial para mamás, menú de lujo y mariachi.",
   },
   {
     id: "independence-us",
@@ -388,11 +378,32 @@ export function formatDateShort(date: Date): string {
 }
 
 /**
+ * Timestamp for ordering an event inside a given calendar column (month 1–12).
+ * Ranges that span months use the segment start in that column (mes de inicio → día de inicio;
+ * meses siguientes → día 1) para que el orden coincida con el calendario real.
+ */
+export function sortKeyForMonth(event: CalendarEvent, year: number, month: number): number {
+  const r = event.recurrence;
+  if (r.kind === "range") {
+    const endMonth = r.monthEnd ?? r.month;
+    if (month >= r.month && month <= endMonth) {
+      if (month === r.month) {
+        return new Date(year, r.month - 1, r.dayStart).getTime();
+      }
+      return new Date(year, month - 1, 1).getTime();
+    }
+  }
+  const d = resolveDate(event, year);
+  return d?.getTime() ?? Number.MAX_SAFE_INTEGER;
+}
+
+/**
  * Returns all events that fall within a given month (1-based) and year.
  * Handles cross-month ranges (e.g. Hispanic Heritage Month Sep 15 – Oct 15).
+ * Ordenados por fecha dentro del mes.
  */
 export function getEventsForMonth(month: number, year: number): CalendarEvent[] {
-  return CALENDAR_EVENTS.filter((event) => {
+  const events = CALENDAR_EVENTS.filter((event) => {
     const r = event.recurrence;
     if (r.kind === "fixed") return r.month === month;
     if (r.kind === "nthWeekday") return r.month === month;
@@ -407,6 +418,11 @@ export function getEventsForMonth(month: number, year: number): CalendarEvent[] 
       return date !== null && date.getMonth() + 1 === month;
     }
     return false;
+  });
+  return events.sort((a, b) => {
+    const t = sortKeyForMonth(a, year, month) - sortKeyForMonth(b, year, month);
+    if (t !== 0) return t;
+    return a.nameES.localeCompare(b.nameES, "es");
   });
 }
 

@@ -1,17 +1,46 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   type CalendarEvent,
   type EventCategory,
-  CALENDAR_EVENTS,
   CATEGORY_META,
   MONTHS_ES,
   getEventsForMonth,
   resolveDate,
   formatDateShort,
 } from "@/lib/calendar";
+
+/** Fondo suave detrás del emoji (sin bloques ni brillos en esquina). */
+const emojiSurface: Record<EventCategory, string> = {
+  mexico: "bg-cilantro/12",
+  usa: "bg-oaxaca/12",
+  both: "bg-maiz/18",
+  food: "bg-salsa/12",
+};
+
+/** Pastilla de fecha alineada al color del filtro de categoría. */
+const datePillByCategory: Record<EventCategory, string> = {
+  mexico:
+    "bg-cilantro/14 text-cilantro ring-1 ring-inset ring-cilantro/25",
+  usa: "bg-oaxaca/14 text-oaxaca ring-1 ring-inset ring-oaxaca/25",
+  both:
+    "bg-maiz/28 text-charcoal ring-1 ring-inset ring-maiz/55",
+  food: "bg-salsa/12 text-salsa ring-1 ring-inset ring-salsa/22",
+};
+
+/** Hover de tarjeta con acento del mismo color que el filtro. */
+const cardHoverByCategory: Record<EventCategory, string> = {
+  mexico:
+    "hover:border-cilantro/40 hover:bg-cilantro/[0.06] hover:shadow-[0_12px_40px_-10px_rgba(47,125,58,0.28)] hover:-translate-y-0.5",
+  usa:
+    "hover:border-oaxaca/40 hover:bg-oaxaca/[0.06] hover:shadow-[0_12px_40px_-10px_rgba(31,78,168,0.22)] hover:-translate-y-0.5",
+  both:
+    "hover:border-maiz/55 hover:bg-maiz/14 hover:shadow-[0_12px_40px_-10px_rgba(242,204,47,0.35)] hover:-translate-y-0.5",
+  food:
+    "hover:border-salsa/40 hover:bg-salsa/[0.06] hover:shadow-[0_12px_40px_-10px_rgba(215,58,47,0.22)] hover:-translate-y-0.5",
+};
 
 // ---------------------------------------------------------------------------
 // Types
@@ -73,40 +102,122 @@ function FilterLegend({
 }
 
 // ---------------------------------------------------------------------------
-// Upcoming Events Strip
+// Upcoming Events — franja horizontal compacta con flechas
 // ---------------------------------------------------------------------------
 function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number }) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+  const [hasOverflow, setHasOverflow] = useState(false);
+
+  const updateScrollState = useCallback(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    const overflow = scrollWidth > clientWidth + 1;
+    setHasOverflow(overflow);
+    setCanPrev(overflow && scrollLeft > 2);
+    setCanNext(overflow && scrollLeft < scrollWidth - clientWidth - 2);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    const ro = new ResizeObserver(updateScrollState);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", updateScrollState);
+      ro.disconnect();
+    };
+  }, [updateScrollState, events.length]);
+
+  const scrollByDir = (dir: -1 | 1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const step = Math.max(240, Math.floor(el.clientWidth * 0.82));
+    el.scrollBy({ left: step * dir, behavior: "smooth" });
+  };
+
   if (events.length === 0) return null;
 
   return (
-    <section className="bg-white py-10 sm:py-14 border-b border-black/10">
+    <section className="border-b border-black/10 bg-white py-5 sm:py-6">
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <p className="mb-6 sm:mb-8 text-lg sm:text-2xl font-light text-[var(--charcoal)]">
+        <p className="mb-3 text-base font-light text-charcoal sm:mb-4 sm:text-lg">
           🎉 Próximas celebraciones
         </p>
-        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {events.slice(0, 6).map((event) => {
-            const meta = CATEGORY_META[event.category];
-            const date = resolveDate(event, year) ?? resolveDate(event, year + 1);
-            if (!date) return null;
 
-            return (
-              <div key={event.id} className="group cursor-pointer">
-                <div className={`relative h-full p-5 sm:p-6 rounded-xl border-2 ${meta.borderClass} bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1`}>
-                  <p className="text-5xl mb-3">{event.emoji}</p>
-                  <p className={`text-sm sm:text-base font-bold mb-2 ${meta.textClass}`}>
-                    {formatDateShort(date)}
-                  </p>
-                  <h3 className="text-base sm:text-lg font-semibold text-[var(--charcoal)] mb-2">
-                    {event.nameES}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[var(--charcoal)]/65 leading-relaxed">
-                    {event.descriptionES}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+        <div className="relative flex items-stretch gap-1 sm:gap-2">
+          {hasOverflow && (
+            <button
+              type="button"
+              aria-label="Ver eventos anteriores"
+              disabled={!canPrev}
+              onClick={() => scrollByDir(-1)}
+              className="z-10 flex w-9 shrink-0 items-center justify-center rounded-xl border border-black/[0.08] bg-white text-charcoal shadow-sm transition hover:bg-bone disabled:pointer-events-none disabled:opacity-25 sm:w-10"
+            >
+              <span className="text-lg leading-none" aria-hidden>
+                ‹
+              </span>
+            </button>
+          )}
+
+          <div
+            ref={scrollerRef}
+            className="flex min-h-0 flex-1 snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden py-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {events.map((event) => {
+              const date = resolveDate(event, year) ?? resolveDate(event, year + 1);
+              if (!date) return null;
+
+              return (
+                <article
+                  key={event.id}
+                  className={`group flex w-[min(100%,260px)] shrink-0 snap-start flex-col rounded-xl border border-black/[0.06] bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-[box-shadow,transform,border-color,background-color] duration-300 sm:w-[min(100%,280px)] sm:p-3.5 ${cardHoverByCategory[event.category]}`}
+                >
+                  <div className="flex gap-2.5">
+                    <div
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-lg leading-none sm:h-11 sm:w-11 sm:rounded-xl sm:text-xl ${emojiSurface[event.category]}`}
+                      aria-hidden
+                    >
+                      {event.emoji}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="line-clamp-2 text-[13px] font-semibold leading-tight text-charcoal sm:text-sm">
+                          {event.nameES}
+                        </h3>
+                        <span
+                          className={`shrink-0 rounded-md px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.12em] sm:text-[10px] ${datePillByCategory[event.category]}`}
+                        >
+                          {formatDateShort(date)}
+                        </span>
+                      </div>
+                      <p className="mt-1.5 line-clamp-2 text-[11px] leading-snug text-charcoal/55 sm:text-xs">
+                        {event.descriptionES}
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          {hasOverflow && (
+            <button
+              type="button"
+              aria-label="Ver siguientes eventos"
+              disabled={!canNext}
+              onClick={() => scrollByDir(1)}
+              className="z-10 flex w-9 shrink-0 items-center justify-center rounded-xl border border-black/[0.08] bg-white text-charcoal shadow-sm transition hover:bg-bone disabled:pointer-events-none disabled:opacity-25 sm:w-10"
+            >
+              <span className="text-lg leading-none" aria-hidden>
+                ›
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </section>
@@ -114,62 +225,55 @@ function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number
 }
 
 // ---------------------------------------------------------------------------
-// Event Card — Modern Design with Geometric Accents
+// Event Card — superficie limpia, categoría solo en emoji + tipografía
 // ---------------------------------------------------------------------------
 function EventCard({ event, year, visible }: { event: CalendarEvent; year: number; visible: boolean }) {
-  const meta = CATEGORY_META[event.category];
   const date = resolveDate(event, year);
   const isBanner = event.recurrence.kind === "monthSpan";
 
   if (!visible) return null;
 
   return (
-    <div className={`group cursor-default transition-all duration-300 ${visible ? "opacity-100" : "opacity-20 pointer-events-none"}`}>
-      {/* Card with modern geometric design */}
-      <div className={`relative px-5 sm:px-6 py-5 sm:py-6 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-102 bg-white border border-black/8 group-hover:border-black/15`}>
-
-        {/* Geometric accent shape — top right, rotated */}
-        <div className={`absolute -top-4 -right-4 w-24 h-24 sm:w-32 sm:h-32 rounded-2xl opacity-20 transform rotate-12 ${meta.bgClass} pointer-events-none blur-sm`} />
-
-        {/* Color bar accent — left side, thick and modern */}
-        <div className={`absolute left-0 top-0 bottom-0 w-2 sm:w-2.5 ${meta.bgClass} rounded-r-sm`} />
-
-        {/* Subtle top gradient line */}
-        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${
-          event.category === "mexico" ? "from-[var(--cilantro)] to-transparent" :
-          event.category === "usa" ? "from-[var(--oaxaca)] to-transparent" :
-          event.category === "both" ? "from-[var(--maiz)] to-transparent" :
-          "from-[var(--salsa)] to-transparent"
-        } opacity-60`} />
-
-        {/* Content with proper z-index */}
-        <div className="relative z-10 flex items-start gap-4">
-          {/* Left column: emoji + date */}
-          <div className="flex flex-col items-center gap-2 shrink-0 pt-1">
-            <span className="text-3xl sm:text-4xl leading-none">{event.emoji}</span>
-            {!isBanner && date && (
-              <div className={`text-xs sm:text-sm font-black ${meta.textClass} text-center leading-tight uppercase tracking-wider`}>
-                {formatDateShort(date)}
-              </div>
-            )}
-            {isBanner && (
-              <span className={`text-[10px] sm:text-xs ${meta.textClass} font-bold uppercase tracking-widest`}>
-                MES
-              </span>
-            )}
+    <div
+      className={`group cursor-default transition-opacity duration-300 ${
+        visible ? "opacity-100" : "pointer-events-none opacity-20"
+      }`}
+    >
+      <div
+        className={`rounded-2xl border border-black/[0.06] bg-white px-4 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-[box-shadow,transform,border-color,background-color] duration-300 sm:px-5 sm:py-5 ${cardHoverByCategory[event.category]}`}
+      >
+        <div className="flex gap-3.5 sm:gap-4">
+          <div
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-xl leading-none sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl ${emojiSurface[event.category]}`}
+            aria-hidden
+          >
+            {event.emoji}
           </div>
 
-          {/* Right column: content */}
-          <div className="flex-1 min-w-0 pt-0.5">
-            <h4 className="text-base sm:text-lg font-semibold text-[var(--charcoal)] leading-snug mb-1">
-              {event.nameES}
-            </h4>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-start justify-between gap-2 gap-y-1">
+              <h4 className="text-[15px] font-semibold leading-snug text-charcoal sm:text-base">
+                {event.nameES}
+              </h4>
+              {!isBanner && date && (
+                <span
+                  className={`shrink-0 rounded-lg px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] sm:text-[11px] sm:px-2.5 sm:py-1 ${datePillByCategory[event.category]}`}
+                >
+                  {formatDateShort(date)}
+                </span>
+              )}
+              {isBanner && (
+                <span
+                  className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] ${datePillByCategory[event.category]}`}
+                >
+                  Todo el mes
+                </span>
+              )}
+            </div>
             {!isBanner && event.nameEN && (
-              <p className="text-xs text-[var(--charcoal)]/50 italic mb-2">
-                {event.nameEN}
-              </p>
+              <p className="mt-0.5 text-xs italic text-charcoal/45">{event.nameEN}</p>
             )}
-            <p className="text-xs sm:text-sm text-[var(--charcoal)]/70 leading-relaxed">
+            <p className="mt-2 text-xs leading-relaxed text-charcoal/65 sm:text-sm">
               {event.restaurantNote || event.descriptionES}
             </p>
           </div>
@@ -200,31 +304,31 @@ function MonthSection({
   return (
     <div className="group">
       {/* Month header */}
-      <div className={`sticky sm:static top-[140px] z-20 sm:z-0 px-5 sm:px-6 py-4 sm:py-5 rounded-lg sm:rounded-xl border-b-4 transition-all duration-300 mb-3 sm:mb-4 ${
-        isCurrentMonth
-          ? "border-[var(--cilantro)] bg-gradient-to-r from-[var(--cilantro)]/10 to-transparent"
-          : "border-black/8 bg-white/50"
-      }`}>
-        <h3 className={`text-2xl sm:text-2xl font-light ${isCurrentMonth ? "text-[var(--cilantro)]" : "text-[var(--charcoal)]"}`}>
+      <div
+        className={`sticky top-[140px] z-20 mb-4 rounded-xl border-b px-1 py-4 transition-colors duration-300 sm:static sm:z-0 sm:mb-5 sm:px-0 sm:py-0 sm:pb-4 ${
+          isCurrentMonth
+            ? "border-cilantro/35 bg-gradient-to-r from-cilantro/[0.08] to-transparent sm:rounded-none sm:bg-transparent"
+            : "border-black/[0.08] sm:border-black/[0.1]"
+        }`}
+      >
+        <h3
+          className={`text-2xl font-light tracking-tight text-charcoal sm:text-[1.65rem] ${
+            isCurrentMonth ? "text-cilantro" : ""
+          }`}
+        >
           {MONTHS_ES[monthIndex - 1]}
         </h3>
       </div>
 
-      {/* Events list */}
-      <div className="space-y-0 border-l-4 border-black/5 rounded-lg overflow-hidden">
+      {/* Events — tarjetas sueltas con aire */}
+      <div className="space-y-3">
         {events.length === 0 ? (
-          <div className="text-center py-6 sm:py-5 text-[var(--charcoal)]/30 text-sm italic">
-            —
+          <div className="rounded-xl border border-dashed border-black/[0.08] py-8 text-center text-sm italic text-charcoal/30">
+            Sin eventos en esta categoría
           </div>
         ) : (
-          events.map((event, idx) => (
-            <div key={event.id} className={idx !== events.length - 1 ? "border-b border-black/5" : ""}>
-              <EventCard
-                event={event}
-                year={year}
-                visible={true}
-              />
-            </div>
+          events.map((event) => (
+            <EventCard key={event.id} event={event} year={year} visible />
           ))
         )}
       </div>
