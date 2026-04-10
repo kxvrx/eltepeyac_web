@@ -52,6 +52,11 @@ interface Props {
   year: number;
 }
 
+/** Mismo ancho y márgenes que «Próximas celebraciones» (alineado con `Container` del sitio). */
+const calContentWidth = "mx-auto w-full max-w-6xl px-5 sm:px-8";
+/** Ritmo vertical compacto, coherente con la franja de próximos eventos. */
+const calSectionY = "py-5 sm:py-6";
+
 // ---------------------------------------------------------------------------
 // Filter Legend with interactive categories
 // ---------------------------------------------------------------------------
@@ -71,8 +76,8 @@ function FilterLegend({
   ];
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-5 sm:px-8 py-8 sm:py-12">
-      <p className="text-xs sm:text-sm text-[var(--charcoal)]/50 mb-6 font-semibold uppercase tracking-wider">
+    <div className={`${calContentWidth} ${calSectionY} border-b border-black/10 bg-white`}>
+      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-charcoal/50 sm:mb-4 sm:text-sm">
         Categorías
       </p>
       <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:gap-4">
@@ -143,8 +148,8 @@ function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number
   if (events.length === 0) return null;
 
   return (
-    <section className="border-b border-black/10 bg-white py-5 sm:py-6">
-      <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+    <section className={`border-b border-black/10 bg-white ${calSectionY}`}>
+      <div className={calContentWidth}>
         <p className="mb-3 text-base font-light text-charcoal sm:mb-4 sm:text-lg">
           🎉 Próximas celebraciones
         </p>
@@ -312,7 +317,7 @@ function MonthSection({
         }`}
       >
         <h3
-          className={`text-2xl font-light tracking-tight text-charcoal sm:text-[1.65rem] ${
+          className={`text-lg font-light tracking-tight text-charcoal sm:text-xl ${
             isCurrentMonth ? "text-cilantro" : ""
           }`}
         >
@@ -355,9 +360,9 @@ export default function CalendarioClient({ upcoming, year }: Props) {
       <FilterLegend active={activeFilter} onChange={setActiveFilter} />
 
       {/* Calendar Grid */}
-      <section className="bg-gradient-to-b from-white via-[var(--bone)]/15 to-[var(--bone)]/30 py-10 sm:py-16">
-        <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-          <div className="grid gap-6 sm:gap-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <section className={`bg-gradient-to-b from-white via-bone/15 to-bone/30 ${calSectionY}`}>
+        <div className={calContentWidth}>
+          <div className="grid gap-5 sm:grid-cols-1 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
             {months.map((m) => (
               <MonthSection
                 key={m}
@@ -372,18 +377,18 @@ export default function CalendarioClient({ upcoming, year }: Props) {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-br from-[var(--cilantro)] to-[var(--cilantro)]/95 py-12 sm:py-20 text-white relative overflow-hidden">
+      <section className={`relative overflow-hidden bg-gradient-to-br from-cilantro to-cilantro/95 text-white ${calSectionY}`}>
         <div className="absolute -top-24 -right-24 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
         <div className="absolute -bottom-16 -left-16 w-40 h-40 bg-white/5 rounded-full blur-2xl" />
 
-        <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
-          <p className="text-xs sm:text-sm font-light uppercase tracking-[0.2em] text-white/75 mb-3">
+        <div className={`relative ${calContentWidth} text-center`}>
+          <p className="mb-2 text-xs font-light uppercase tracking-[0.2em] text-white/75 sm:mb-3 sm:text-sm">
             🎊 Celebraciones Especiales
           </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-5 sm:mb-6 leading-tight">
+          <h2 className="mb-4 text-2xl font-light leading-tight sm:mb-5 sm:text-3xl lg:text-4xl">
             ¿Celebras algo importante?
           </h2>
-          <p className="text-sm sm:text-base text-white/90 mb-8 sm:mb-10 leading-relaxed max-w-2xl mx-auto">
+          <p className="mx-auto mb-6 max-w-2xl text-sm leading-relaxed text-white/90 sm:mb-8 sm:text-base">
             Coordina con nosotros catering, eventos privados, menús especiales para tu grupo.
             El Tepeyac es el lugar perfecto para tus celebraciones.
           </p>
