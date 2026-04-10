@@ -15,40 +15,27 @@ export default function CalendarioPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="grain relative bg-[var(--charcoal)] pb-16 pt-32 sm:pt-36">
+      {/* Hero Section */}
+      <section className="grain relative bg-[var(--charcoal)] pt-32 pb-24 sm:pt-40 sm:pb-32">
         <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-          <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.38em] text-[var(--bone)]/45">
-            Calendario · El Tepeyac · {year}
-          </p>
-          <h1 className="mb-5 max-w-2xl text-4xl font-light leading-[1.05] text-[var(--bone)] sm:text-5xl lg:text-6xl">
-            Celebramos todo el año
-          </h1>
-          <p className="max-w-xl text-base leading-7 text-[var(--bone)]/60 sm:text-lg">
-            Fechas culturales, gastronómicas y patrias que dan sabor a cada mes —
-            tradiciones de México, EE.UU. y la mesa que nos une.
-          </p>
-
-          {/* Category legend dots */}
-          <div className="mt-10 flex flex-wrap gap-4">
-            {[
-              { color: "bg-[var(--cilantro)]", label: "México 🇲🇽" },
-              { color: "bg-[var(--oaxaca)]", label: "EE.UU. 🇺🇸" },
-              { color: "bg-[var(--maiz)]", label: "Ambos 🌎" },
-              { color: "bg-[var(--salsa)]", label: "Comida 🍽️" },
-            ].map(({ color, label }) => (
-              <div key={label} className="flex items-center gap-2">
-                <span className={`h-2.5 w-2.5 rounded-full ${color}`} />
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--bone)]/50">
-                  {label}
-                </span>
-              </div>
-            ))}
+          <div className="max-w-4xl">
+            <p className="text-sm uppercase tracking-[0.25em] text-[var(--bone)]/50 mb-6 font-light">
+              {year} · Celebraciones
+            </p>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-light leading-tight text-[var(--bone)] mb-8">
+              El calendario de<br />
+              <span className="italic">nuestras tradiciones</span>
+            </h1>
+            <p className="text-lg sm:text-xl text-[var(--bone)]/70 leading-relaxed max-w-2xl">
+              Cada mes trae sus propias celebraciones — fechas que honran nuestras raíces mexicanas,
+              la riqueza cultural que compartimos con nuestros vecinos en Estados Unidos,
+              y los ingredientes que definen nuestro arte culinario.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Client-side interactive section */}
+      {/* Interactive Calendar Section */}
       <CalendarioClient upcoming={upcoming} year={year} />
     </>
   );

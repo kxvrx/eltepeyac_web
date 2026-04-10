@@ -24,44 +24,39 @@ interface Props {
 }
 
 // ---------------------------------------------------------------------------
-// Filter Bar
+// Filter Tabs
 // ---------------------------------------------------------------------------
-function FilterBar({
+function FilterTabs({
   active,
   onChange,
 }: {
   active: FilterOption;
   onChange: (f: FilterOption) => void;
 }) {
-  const filters: Array<{ value: FilterOption; label: string; flag: string }> = [
-    { value: "all", label: "Todos", flag: "✨" },
-    { value: "mexico", label: "México", flag: CATEGORY_META.mexico.flag },
-    { value: "usa", label: "EE.UU.", flag: CATEGORY_META.usa.flag },
-    { value: "both", label: "Ambos", flag: CATEGORY_META.both.flag },
-    { value: "food", label: "Comida", flag: CATEGORY_META.food.flag },
+  const filters: Array<{ value: FilterOption; label: string }> = [
+    { value: "all", label: "Todos" },
+    { value: "mexico", label: "🇲🇽 México" },
+    { value: "usa", label: "🇺🇸 EE.UU." },
+    { value: "both", label: "🌎 Ambos" },
+    { value: "food", label: "🍽️ Comida" },
   ];
 
   return (
-    <div className="sticky top-[68px] z-40 border-b border-black/10 bg-[var(--bone)]/90 backdrop-blur-sm">
-      <div className="mx-auto flex w-full max-w-6xl gap-2 overflow-x-auto px-5 py-3 sm:px-8">
+    <div className="border-b border-black/8 bg-white">
+      <div className="mx-auto flex w-full max-w-6xl gap-8 overflow-x-auto px-5 sm:px-8 py-6">
         {filters.map((f) => {
           const isActive = active === f.value;
-          let activeClass = "bg-[var(--charcoal)] text-[var(--bone)]";
-          if (f.value !== "all" && isActive) {
-            activeClass = CATEGORY_META[f.value as EventCategory].pillActive;
-          }
           return (
             <button
               key={f.value}
               onClick={() => onChange(f.value)}
-              className={`flex shrink-0 items-center gap-1.5 border px-4 py-2 text-[11px] font-mono tracking-[0.12em] uppercase transition-colors duration-150 ${
+              className={`shrink-0 pb-2 text-base font-medium transition-colors duration-200 border-b-2 ${
                 isActive
-                  ? `border-transparent ${activeClass}`
-                  : "border-black/20 text-[var(--charcoal)]/55 hover:border-black/40 hover:text-[var(--charcoal)]/80"
+                  ? "border-[var(--charcoal)] text-[var(--charcoal)]"
+                  : "border-transparent text-[var(--charcoal)]/50 hover:text-[var(--charcoal)]/75"
               }`}
             >
-              <span>{f.flag}</span>
-              <span>{f.label}</span>
+              {f.label}
             </button>
           );
         })}
@@ -71,40 +66,35 @@ function FilterBar({
 }
 
 // ---------------------------------------------------------------------------
-// Upcoming Banner
+// Upcoming Events Strip
 // ---------------------------------------------------------------------------
-function ProximasBanner({ events, year }: { events: CalendarEvent[]; year: number }) {
+function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number }) {
   if (events.length === 0) return null;
 
   return (
-    <section className="bg-[var(--bone)] py-10">
+    <section className="bg-white py-16 sm:py-20">
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
-        <h2 className="mb-6 font-mono text-[11px] uppercase tracking-[0.32em] text-[var(--charcoal)]/45">
+        <p className="mb-8 text-lg font-light text-[var(--charcoal)]/60 sm:text-xl">
           Próximas celebraciones
-        </h2>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {events.map((event) => {
+        </p>
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {events.slice(0, 6).map((event) => {
             const meta = CATEGORY_META[event.category];
             const date = resolveDate(event, year) ?? resolveDate(event, year + 1);
+            if (!date) return null;
             return (
               <div
                 key={event.id}
-                className={`flex w-44 shrink-0 flex-col gap-2 border-l-4 bg-white/70 px-3 py-3 ring-1 ring-black/8 transition-transform duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-md ${meta.borderClass}`}
+                className="group cursor-default rounded-lg border border-black/5 bg-gradient-to-br from-white to-[var(--bone)]/30 p-6 transition-all duration-300 hover:border-black/15 hover:shadow-lg"
               >
-                <span className="text-2xl">{event.emoji}</span>
-                <div>
-                  <p className="text-sm font-semibold leading-tight text-[var(--charcoal)]">
-                    {event.nameES}
-                  </p>
-                  <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.15em] text-[var(--charcoal)]/40">
-                    {event.nameEN}
-                  </p>
-                </div>
-                {date && (
-                  <p className={`font-mono text-[11px] font-semibold uppercase tracking-[0.12em] ${meta.textClass}`}>
-                    {formatDateShort(date)}
-                  </p>
-                )}
+                <p className={`text-5xl mb-3 ${meta.textClass}`}>{event.emoji}</p>
+                <p className={`text-base font-bold mb-1 ${meta.textClass}`}>
+                  {formatDateShort(date)}
+                </p>
+                <h3 className="text-lg font-semibold text-[var(--charcoal)] mb-2">
+                  {event.nameES}
+                </h3>
+                <p className="text-sm text-[var(--charcoal)]/60">{event.descriptionES}</p>
               </div>
             );
           })}
@@ -115,51 +105,47 @@ function ProximasBanner({ events, year }: { events: CalendarEvent[]; year: numbe
 }
 
 // ---------------------------------------------------------------------------
-// Event Card
+// Event Card — Redesigned for clarity
 // ---------------------------------------------------------------------------
 function EventCard({ event, year, visible }: { event: CalendarEvent; year: number; visible: boolean }) {
   const meta = CATEGORY_META[event.category];
   const date = resolveDate(event, year);
-
-  // monthSpan events get a wider "banner" style
   const isBanner = event.recurrence.kind === "monthSpan";
 
   return (
     <div
       title={event.descriptionES}
-      className={`border-l-[3px] bg-white/60 px-3 transition-all duration-200 hover:bg-white hover:shadow-sm ${meta.borderClass} ${
-        isBanner ? "py-2.5" : "py-2"
+      className={`rounded-lg border-l-4 bg-gradient-to-r from-white to-[var(--bone)]/20 p-5 transition-all duration-200 hover:shadow-md ${
+        meta.borderClass
       } ${visible ? "opacity-100" : "pointer-events-none opacity-20"}`}
     >
       {isBanner ? (
-        // Banner layout for month-span events
-        <div className="flex items-center gap-2">
-          <span className="text-base">{event.emoji}</span>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[12px] font-semibold text-[var(--charcoal)]/85">{event.nameES}</p>
-            <p className={`font-mono text-[9px] uppercase tracking-[0.12em] ${meta.textClass}`}>
+        // Month-span banner layout
+        <div className="flex items-start gap-3">
+          <span className="mt-1 text-3xl">{event.emoji}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-[var(--charcoal)]">{event.nameES}</p>
+            <p className={`text-xs mt-1 ${meta.textClass} font-semibold uppercase tracking-wide`}>
               todo el mes
             </p>
           </div>
         </div>
       ) : (
-        // Compact inline layout
-        <div className="flex items-center gap-2">
-          <span className="text-sm">{event.emoji}</span>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-baseline gap-1.5">
-              {date && (
-                <span className={`shrink-0 font-mono text-[10px] font-semibold uppercase ${meta.textClass}`}>
-                  {formatDateShort(date)}
-                </span>
-              )}
-              <span className="truncate text-[12px] font-semibold text-[var(--charcoal)]/85">
-                {event.nameES}
-              </span>
-            </div>
-            <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-[var(--charcoal)]/35">
-              {event.nameEN}
-            </p>
+        // Regular event card
+        <div className="flex items-start gap-4">
+          <span className="text-2xl shrink-0 mt-0.5">{event.emoji}</span>
+          <div className="flex-1 min-w-0">
+            {date && (
+              <p className={`text-lg font-bold mb-1 ${meta.textClass}`}>
+                {formatDateShort(date)}
+              </p>
+            )}
+            <h4 className="text-base font-semibold text-[var(--charcoal)] leading-tight">
+              {event.nameES}
+            </h4>
+            {event.nameEN && (
+              <p className="text-xs text-[var(--charcoal)]/50 mt-1">{event.nameEN}</p>
+            )}
           </div>
         </div>
       )}
@@ -168,62 +154,49 @@ function EventCard({ event, year, visible }: { event: CalendarEvent; year: numbe
 }
 
 // ---------------------------------------------------------------------------
-// Month Column
+// Month Section
 // ---------------------------------------------------------------------------
-function MonthColumn({
+function MonthSection({
   monthIndex,
   year,
   activeFilter,
   isCurrentMonth,
 }: {
-  monthIndex: number; // 1-based
+  monthIndex: number;
   year: number;
   activeFilter: FilterOption;
   isCurrentMonth: boolean;
 }) {
   const events = getEventsForMonth(monthIndex, year);
-  const monthNum = String(monthIndex).padStart(2, "0");
 
   return (
     <div
-      className={`relative overflow-hidden border-t-2 pt-4 ${
+      className={`rounded-xl border-t-4 p-8 transition-all duration-300 ${
         isCurrentMonth
-          ? "border-[var(--cilantro)] bg-[var(--cilantro)]/[0.04]"
-          : "border-black/10"
+          ? "border-[var(--cilantro)] bg-gradient-to-br from-[var(--cilantro)]/8 via-white to-white shadow-md"
+          : "border-black/8 bg-white"
       }`}
     >
-      {/* Watermark */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute right-1 top-0 select-none text-[72px] font-light leading-none text-[var(--charcoal)]/[0.04]"
-      >
-        {monthNum}
-      </span>
-
-      {/* Month name */}
-      <h3
-        className={`mb-3 font-mono text-[11px] uppercase tracking-[0.22em] ${
-          isCurrentMonth ? "text-[var(--cilantro)]" : "text-[var(--charcoal)]/35"
-        }`}
-      >
+      {/* Month Header */}
+      <h3 className="text-2xl font-light text-[var(--charcoal)] mb-8">
         {MONTHS_ES[monthIndex - 1]}
       </h3>
 
-      {/* Event cards */}
-      <div className="flex flex-col gap-1.5">
-        {events.length === 0 ? (
-          <p className="font-mono text-[10px] text-[var(--charcoal)]/20">—</p>
-        ) : (
-          events.map((event) => (
+      {/* Events */}
+      {events.length === 0 ? (
+        <p className="text-sm text-[var(--charcoal)]/30 italic">Sin celebraciones este mes</p>
+      ) : (
+        <div className="space-y-4">
+          {events.map((event) => (
             <EventCard
               key={event.id}
               event={event}
               year={year}
               visible={activeFilter === "all" || activeFilter === event.category}
             />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -233,80 +206,82 @@ function MonthColumn({
 // ---------------------------------------------------------------------------
 function Legend() {
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-wrap gap-4 px-5 py-6 sm:px-8">
-      {(Object.keys(CATEGORY_META) as EventCategory[]).map((cat) => {
-        const meta = CATEGORY_META[cat];
-        return (
-          <div key={cat} className="flex items-center gap-2">
-            <span className={`h-3 w-1 ${meta.bgClass}`} />
-            <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--charcoal)]/50">
-              {meta.flag} {meta.labelES}
-            </span>
-          </div>
-        );
-      })}
+    <div className="mx-auto w-full max-w-6xl px-5 sm:px-8 py-10">
+      <p className="text-sm text-[var(--charcoal)]/50 mb-4">Categorías</p>
+      <div className="flex flex-wrap gap-6">
+        {(Object.keys(CATEGORY_META) as EventCategory[]).map((cat) => {
+          const meta = CATEGORY_META[cat];
+          return (
+            <div key={cat} className="flex items-center gap-3">
+              <span className={`h-3 w-3 rounded-full ${meta.bgClass}`} />
+              <span className="text-sm text-[var(--charcoal)]/70">
+                {meta.labelES}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Main Client Component
+// Main Component
 // ---------------------------------------------------------------------------
 export default function CalendarioClient({ upcoming, year }: Props) {
   const [activeFilter, setActiveFilter] = useState<FilterOption>("all");
-  const currentMonth = new Date().getMonth() + 1; // 1-based
+  const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
 
   const months = useMemo(() => Array.from({ length: 12 }, (_, i) => i + 1), []);
 
   return (
     <>
-      {/* Upcoming Strip */}
-      <ProximasBanner events={upcoming} year={year} />
+      {/* Upcoming Events */}
+      <UpcomingStrip events={upcoming} year={year} />
 
-      {/* Ornament divider */}
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <div className="ornament" />
-      </div>
-
-      {/* Filter Bar */}
-      <FilterBar active={activeFilter} onChange={setActiveFilter} />
+      {/* Filter Tabs */}
+      <FilterTabs active={activeFilter} onChange={setActiveFilter} />
 
       {/* Legend */}
       <Legend />
 
-      {/* Year Grid */}
-      <section className="mx-auto w-full max-w-6xl px-5 pb-24 sm:px-8">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {months.map((m) => (
-            <MonthColumn
-              key={m}
-              monthIndex={m}
-              year={year}
-              activeFilter={activeFilter}
-              isCurrentMonth={m === currentMonth && year === currentYear}
-            />
-          ))}
+      {/* Calendar Grid */}
+      <section className="bg-gradient-to-b from-white via-[var(--bone)]/20 to-[var(--bone)]/40 py-20 sm:py-28">
+        <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+            {months.map((m) => (
+              <MonthSection
+                key={m}
+                monthIndex={m}
+                year={year}
+                activeFilter={activeFilter}
+                isCurrentMonth={m === currentMonth && year === currentYear}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* CTA Band */}
-      <section className="bg-[var(--cilantro)] py-16 text-center">
-        <div className="mx-auto max-w-6xl px-5 sm:px-8">
-          <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.32em] text-white/50">
-            Reservaciones · Catering · Eventos
+      {/* CTA Section */}
+      <section className="bg-[var(--cilantro)] py-20 sm:py-24 text-white">
+        <div className="mx-auto max-w-2xl px-5 text-center sm:px-8">
+          <p className="text-sm font-light uppercase tracking-[0.2em] text-white/70 mb-4">
+            Celebraciones Especiales
           </p>
-          <h2 className="mb-6 text-3xl font-light text-white sm:text-4xl">
-            ¿Celebras algo especial?
+          <h2 className="text-4xl sm:text-5xl font-light mb-8 leading-tight">
+            ¿Planeas algo para tu grupo?
           </h2>
-          <p className="mb-8 text-white/70">
-            Cuéntanos la ocasión y hacemos que sea inolvidable.
+          <p className="text-lg text-white/80 mb-10">
+            Coordenemos una celebración especial en El Tepeyac. Catering, eventos privados,
+            menús personalizados — hacemos que tu fecha sea inolvidable.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center bg-white px-8 py-4 text-sm font-semibold uppercase tracking-wider text-[var(--cilantro)] transition hover:brightness-95"
+            className="inline-flex items-center gap-2 bg-white px-10 py-4 text-base font-semibold text-[var(--cilantro)] rounded-lg transition hover:shadow-lg hover:-translate-y-0.5"
           >
-            Contáctanos
+            Reservar una celebración
+            <span>→</span>
           </Link>
         </div>
       </section>
