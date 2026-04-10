@@ -114,7 +114,7 @@ function UpcomingStrip({ events, year }: { events: CalendarEvent[]; year: number
 }
 
 // ---------------------------------------------------------------------------
-// NEW: Event Card Design — Super Clean & Minimal
+// Event Card — Modern Design with Geometric Accents
 // ---------------------------------------------------------------------------
 function EventCard({ event, year, visible }: { event: CalendarEvent; year: number; visible: boolean }) {
   const meta = CATEGORY_META[event.category];
@@ -125,35 +125,54 @@ function EventCard({ event, year, visible }: { event: CalendarEvent; year: numbe
 
   return (
     <div className={`group cursor-default transition-all duration-300 ${visible ? "opacity-100" : "opacity-20 pointer-events-none"}`}>
-      <div className={`flex items-start gap-4 px-4 sm:px-5 py-4 sm:py-5 rounded-lg hover:bg-[var(--bone)]/30 transition-colors duration-200 border-l-4 ${meta.borderClass}`}>
-        {/* Emoji + Date Column */}
-        <div className="flex flex-col items-center gap-2 shrink-0">
-          <span className={`text-3xl sm:text-4xl`}>{event.emoji}</span>
-          {!isBanner && date && (
-            <span className={`text-xs sm:text-sm font-black ${meta.textClass} text-center leading-tight`}>
-              {formatDateShort(date)}
-            </span>
-          )}
-          {isBanner && (
-            <span className={`text-xs ${meta.textClass} font-bold uppercase tracking-wider`}>
-              TODO MES
-            </span>
-          )}
-        </div>
+      {/* Card with modern geometric design */}
+      <div className={`relative px-5 sm:px-6 py-5 sm:py-6 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-102 bg-white border border-black/8 group-hover:border-black/15`}>
 
-        {/* Content Column */}
-        <div className="flex-1 min-w-0 pt-0.5">
-          <h4 className="text-base sm:text-lg font-semibold text-[var(--charcoal)] leading-snug mb-1">
-            {event.nameES}
-          </h4>
-          {!isBanner && event.nameEN && (
-            <p className="text-xs text-[var(--charcoal)]/50 italic mb-2">
-              {event.nameEN}
+        {/* Geometric accent shape — top right, rotated */}
+        <div className={`absolute -top-4 -right-4 w-24 h-24 sm:w-32 sm:h-32 rounded-2xl opacity-20 transform rotate-12 ${meta.bgClass} pointer-events-none blur-sm`} />
+
+        {/* Color bar accent — left side, thick and modern */}
+        <div className={`absolute left-0 top-0 bottom-0 w-2 sm:w-2.5 ${meta.bgClass} rounded-r-sm`} />
+
+        {/* Subtle top gradient line */}
+        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${
+          event.category === "mexico" ? "from-[var(--cilantro)] to-transparent" :
+          event.category === "usa" ? "from-[var(--oaxaca)] to-transparent" :
+          event.category === "both" ? "from-[var(--maiz)] to-transparent" :
+          "from-[var(--salsa)] to-transparent"
+        } opacity-60`} />
+
+        {/* Content with proper z-index */}
+        <div className="relative z-10 flex items-start gap-4">
+          {/* Left column: emoji + date */}
+          <div className="flex flex-col items-center gap-2 shrink-0 pt-1">
+            <span className="text-3xl sm:text-4xl leading-none">{event.emoji}</span>
+            {!isBanner && date && (
+              <div className={`text-xs sm:text-sm font-black ${meta.textClass} text-center leading-tight uppercase tracking-wider`}>
+                {formatDateShort(date)}
+              </div>
+            )}
+            {isBanner && (
+              <span className={`text-[10px] sm:text-xs ${meta.textClass} font-bold uppercase tracking-widest`}>
+                MES
+              </span>
+            )}
+          </div>
+
+          {/* Right column: content */}
+          <div className="flex-1 min-w-0 pt-0.5">
+            <h4 className="text-base sm:text-lg font-semibold text-[var(--charcoal)] leading-snug mb-1">
+              {event.nameES}
+            </h4>
+            {!isBanner && event.nameEN && (
+              <p className="text-xs text-[var(--charcoal)]/50 italic mb-2">
+                {event.nameEN}
+              </p>
+            )}
+            <p className="text-xs sm:text-sm text-[var(--charcoal)]/70 leading-relaxed">
+              {event.restaurantNote || event.descriptionES}
             </p>
-          )}
-          <p className="text-xs sm:text-sm text-[var(--charcoal)]/70 leading-relaxed">
-            {event.restaurantNote || event.descriptionES}
-          </p>
+          </div>
         </div>
       </div>
     </div>
